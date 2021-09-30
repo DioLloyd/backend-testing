@@ -13,7 +13,7 @@ public class ImgurTests extends BaseTest {
     @Test
     @SneakyThrows
     public void getAccountTest() {
-        Response response = given(reqSpecAuth)
+        Response response = given(requestSpecAuth)
                 .when()
                 .get("https://api.imgur.com/3/account/{username}", username)
                 .prettyPeek();

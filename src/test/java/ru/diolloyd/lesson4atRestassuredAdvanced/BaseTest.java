@@ -3,7 +3,10 @@ package ru.diolloyd.lesson4atRestassuredAdvanced;
 import io.qameta.allure.restassured.AllureRestAssured;
 import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
+import io.restassured.builder.ResponseSpecBuilder;
+import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
+import io.restassured.specification.ResponseSpecification;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.BeforeAll;
 
@@ -11,13 +14,17 @@ import java.io.File;
 import java.io.FileReader;
 import java.util.Properties;
 
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.core.IsEqual.equalTo;
+
 public abstract class BaseTest {
     protected static final File file = new File("src/test/resources/application.properties");
     protected static final Properties properties = new Properties();
     protected static String username;
-    protected static RequestSpecification reqSpecAuth;
-    protected static RequestSpecification reqSpecHdJpgImageSpec;
-    protected final File JPG_HD_IMAGE = new File("src/test/resources/Cruella.jpg");
+    protected static RequestSpecification requestSpecAuth;
+    protected static RequestSpecification requestSpecAuthJpgHD;
+    protected static ResponseSpecification responsePositiveSpec;
+    protected static final File JPG_HD_IMAGE = new File("src/test/resources/Cruella.jpg");
     protected final File BMP_1x1_IMAGE = new File("src/test/resources/pic1x1.bmp");
     protected final File PNG_IMAGE = new File("src/test/resources/Carl-meme.png");
     protected final File GIF_IMAGE = new File("src/test/resources/Cat.gif");
@@ -30,11 +37,18 @@ public abstract class BaseTest {
         RestAssured.enableLoggingOfRequestAndResponseIfValidationFails(); //TODO посмотерть логи без этой строчки
         RestAssured.filters(new AllureRestAssured());
         RestAssured.baseURI = "https://api.imgur.com/3";
-        reqSpecAuth = new RequestSpecBuilder()
+        requestSpecAuth = new RequestSpecBuilder()
                 .addHeader("Authorization", properties.getProperty("token"))
                 .build();
-//        reqSpecHdJpgImageSpec = new RequestSpecBuilder()
-//                .addMultiPart("image", new File("src/test/resources/Cruella.jpg"))
+        responsePositiveSpec = new ResponseSpecBuilder()
+                .expectStatusCode(200)
+                .expectBody("status", equalTo(200))
+                .expectBody("success", is(true))
+                .expectContentType(ContentType.JSON)
+                .build();
+//        requestSpecAuthJpgHD = new RequestSpecBuilder()
+//                .addRequestSpecification(requestSpecAuth)
+//                .addMultiPart("image", JPG_HD_IMAGE)
 //                .build();
     }
 }

@@ -1,7 +1,12 @@
 package ru.diolloyd.lesson4atRestassuredAdvanced;
 
+import io.restassured.builder.MultiPartSpecBuilder;
+import io.restassured.builder.RequestSpecBuilder;
+import io.restassured.builder.ResponseSpecBuilder;
+import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import ru.diolloyd.lesson4atRestassuredAdvanced.dto.FavoriteResponseDto;
 import ru.diolloyd.lesson4atRestassuredAdvanced.dto.FileTypeInvalidResponseDto;
@@ -9,6 +14,7 @@ import ru.diolloyd.lesson4atRestassuredAdvanced.dto.ImageDataDto;
 import ru.diolloyd.lesson4atRestassuredAdvanced.dto.ImageResponseDto;
 
 import java.io.File;
+import java.nio.charset.StandardCharsets;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -19,20 +25,20 @@ import static ru.diolloyd.lesson4atRestassuredAdvanced.ApiUtilsCommon.*;
 public class ImageTests extends BaseTest {
 
     /**
-     * Позитивные тесты
+     * Позитивные тесты авторизованным пользователем
      */
 
     @Test
     public void uploadHdJpgImageTest() {
         ImageResponseDto imageDto = uploadImagePositive(JPG_HD_IMAGE);
-        deleteImageRequest(imageDto);
+        deleteImagePositive(imageDto);
     }
 
     @Test
     public void getHdJpgImageTest() {
         ImageResponseDto imageDto = uploadImagePositive(JPG_HD_IMAGE);
         getImagePositive(imageDto);
-        deleteImageRequest(imageDto);
+        deleteImagePositive(imageDto);
     }
 
     @Test
@@ -48,20 +54,20 @@ public class ImageTests extends BaseTest {
         ImageResponseDto imageDto = uploadImagePositive(JPG_HD_IMAGE);
         favoriteImagePositive(imageDto);
         getImagePositive(imageDto);
-        deleteImageRequest(imageDto);
+        deleteImagePositive(imageDto);
     }
 
     @Test
     public void upload1x1bmpImageTest() {
         ImageResponseDto imageDto = uploadImagePositive(BMP_1x1_IMAGE);
-        deleteImageRequest(imageDto);
+        deleteImagePositive(imageDto);
     }
 
     @Test
     public void get1x1bmpImageTest() {
         ImageResponseDto imageDto = uploadImagePositive(BMP_1x1_IMAGE);
         getImagePositive(imageDto);
-        deleteImageRequest(imageDto);
+        deleteImagePositive(imageDto);
     }
 
     @Test
@@ -77,20 +83,20 @@ public class ImageTests extends BaseTest {
         ImageResponseDto imageDto = uploadImagePositive(BMP_1x1_IMAGE);
         favoriteImagePositive(imageDto);
         getImagePositive(imageDto);
-        deleteImageRequest(imageDto);
+        deleteImagePositive(imageDto);
     }
 
     @Test
     public void uploadPngImageTest() {
         ImageResponseDto imageDto = uploadImagePositive(PNG_IMAGE);
-        deleteImageRequest(imageDto);
+        deleteImagePositive(imageDto);
     }
 
     @Test
     public void getPngImageTest() {
         ImageResponseDto imageDto = uploadImagePositive(PNG_IMAGE);
         getImagePositive(imageDto);
-        deleteImageRequest(imageDto);
+        deleteImagePositive(imageDto);
     }
 
     @Test
@@ -106,20 +112,20 @@ public class ImageTests extends BaseTest {
         ImageResponseDto imageDto = uploadImagePositive(PNG_IMAGE);
         favoriteImagePositive(imageDto);
         getImagePositive(imageDto);
-        deleteImageRequest(imageDto);
+        deleteImagePositive(imageDto);
     }
 
     @Test
     public void uploadGifImageTest() {
         ImageResponseDto imageDto = uploadImagePositive(GIF_IMAGE);
-        deleteImageRequest(imageDto);
+        deleteImagePositive(imageDto);
     }
 
     @Test
     public void getGifImageTest() {
         ImageResponseDto imageDto = uploadImagePositive(GIF_IMAGE);
         getImagePositive(imageDto);
-        deleteImageRequest(imageDto);
+        deleteImagePositive(imageDto);
     }
 
     @Test
@@ -135,11 +141,11 @@ public class ImageTests extends BaseTest {
         ImageResponseDto imageDto = uploadImagePositive(GIF_IMAGE);
         favoriteImagePositive(imageDto);
         getImagePositive(imageDto);
-        deleteImageRequest(imageDto);
+        deleteImagePositive(imageDto);
     }
 
     /**
-     * Негативные тесты
+     * Негативные тесты авторизованным пользователем
      */
 
     @Test
@@ -156,32 +162,50 @@ public class ImageTests extends BaseTest {
         imageDto.getData().setDescription("");
         updateNonExistentImage(imageDto);
     }
-//
-//    @Test
-//    public void getNonExistentImageTest() {
-//        imageHash = RandomStringUtils.randomAlphanumeric(7);
-//        getImageRequest(null, null, null, null, null, 404);
-//    }
-//
-//    @Test
-//    public void deleteNonExistentImageTest() {
-//        deleteHash = RandomStringUtils.randomAlphanumeric(15);
-//        deleteImageRequest();
-//    }
+
+    @Test
+    public void getNonExistentImageTest() {
+        ImageResponseDto imageDto = new ImageResponseDto();
+        imageDto.setData(new ImageDataDto());
+        imageDto.getData().setImageId(RandomStringUtils.randomAlphanumeric(7));
+        getNonExistentImage(imageDto);
+    }
+
+    @Test
+    public void favoriteNonExistImageTest() {
+        ImageResponseDto imageDto = new ImageResponseDto();
+        imageDto.setData(new ImageDataDto());
+        imageDto.getData().setImageId(RandomStringUtils.randomAlphanumeric(7));
+        favoriteNonExistImage(imageDto);
+    }
+
+    @Test
+    public void deleteNonExistentImageTest() {
+        ImageResponseDto imageDto = new ImageResponseDto();
+        imageDto.setData(new ImageDataDto());
+        imageDto.getData().setDeleteHash(RandomStringUtils.randomAlphanumeric(15));
+        deleteNonExistentImage(imageDto);
+    }
 
     /**
      * Тестовые методы для негативных тестов
      */
 
-    private void updateNonExistentImage(ImageResponseDto imageDto) {
-        updateImageInfoRequest(imageDto);
-    }
 
     private void uploadUnknownFormatNegative(File file) {
-        Response response = uploadImageRequest(file);
-        assertThat(response.statusCode(), equalTo(400));
+        Response response = uploadImageRequest(
+                new RequestSpecBuilder()
+                        .addRequestSpecification(requestSpecAuth)
+                        .addMultiPart("image", file)
+                        .build(),
+                new ResponseSpecBuilder()
+                        .expectStatusCode(400)
+                        .expectBody("status", equalTo(400))
+                        .expectBody("success", Matchers.is(false))
+                        .expectContentType(ContentType.JSON)
+                        .build()
+        );
 
-        assertThat(response.jsonPath().get("success"), equalTo(false));
         assertThat(response.jsonPath().get("data.request"), equalTo("/3/image"));
         assertThat(response.jsonPath().get("data.method"), equalTo("POST"));
         assertThat(response.jsonPath().get("data.error.code"), equalTo(1003));
@@ -197,22 +221,74 @@ public class ImageTests extends BaseTest {
         assertThat((String) ftiDto.getData().getError().get("type"), equalTo("ImgurException"));
     }
 
+    private void updateNonExistentImage(ImageResponseDto imageDto) {
+        Response response = updateImageInfoRequest(
+                requestSpecAuth,
+                new ResponseSpecBuilder()
+                        .expectStatusCode(404)
+                        .build(),
+                imageDto);
+        assertThat(response.header("content-type").contains("text/html"), equalTo(true));
+    }
+
+    private void getNonExistentImage(ImageResponseDto imageDto) {
+        Response response = getImageRequest(
+                requestSpecAuth,
+                new ResponseSpecBuilder()
+                        .expectStatusCode(404)
+                        .expectBody("status", equalTo(404))
+                        .build(),
+                imageDto
+        );
+        assertThat(response.header("content-type").contains("text/html"), equalTo(true));
+    }
+
+    private void favoriteNonExistImage(ImageResponseDto imageDto) {
+        Response response = favoriteImageRequest(
+                requestSpecAuth,
+                new ResponseSpecBuilder()
+                        .expectStatusCode(404)
+                        .build(),
+                imageDto
+        );
+        assertThat(response.header("content-type").contains("text/html"), equalTo(true));
+    }
+
+    public void deleteNonExistentImage(ImageResponseDto imageDto) {
+        Response response = deleteImageRequest(
+                requestSpecAuth,
+                new ResponseSpecBuilder()
+                        .expectStatusCode(404)
+                        .build(),
+                imageDto
+        );
+        assertThat(response.header("content-type").contains("text/html"), equalTo(true));
+    }
+
     /**
      * Тестовые методы для позитивных тестов
-     * Методы обработки тестов
      */
 
     private ImageResponseDto uploadImagePositive(File file) {
-        Response response = uploadImageRequest(file);
-        assertThat(response.statusCode(), equalTo(200));
-        positiveUploadAssertsCode200(response);
+        Response response = uploadImageRequest(
+                new RequestSpecBuilder()
+                        .addRequestSpecification(requestSpecAuth)
+                        .addMultiPart("image", file)
+                        .build(),
+                responsePositiveSpec
+        );
+
+//        ImageDto imageDto = response.getBody().as(ImageDto.class);
+//        assertThat(imageDto.getData().getId(), is(notNullValue()));
+//        assertThat(imageDto.getData().getDeleteHash(), is(notNullValue()));
+//        return imageDto;
+        assertThat(response.jsonPath().get("data.id"), is(notNullValue()));
+        assertThat(response.jsonPath().get("data.deletehash"), is(notNullValue()));
         return response.getBody().as(ImageResponseDto.class);
     }
 
     private void getImagePositive(ImageResponseDto imageDto) {
-        Response response = getImageRequest(imageDto);
-        assertThat(response.statusCode(), equalTo(200));
-        assertThat(response.jsonPath().get("success"), equalTo(true));
+        Response response = getImageRequest(requestSpecAuth, responsePositiveSpec, imageDto);
         assertThat(response.jsonPath().get("data.deletehash"), equalTo(imageDto.getData().getDeleteHash()));
         assertThat(response.jsonPath().get("data.id"), equalTo(imageDto.getData().getImageId()));
         assertThat(response.jsonPath().get("data.type"), equalTo(imageDto.getData().getImageType()));
@@ -221,15 +297,10 @@ public class ImageTests extends BaseTest {
         assertThat(response.jsonPath().get("data.width"), equalTo(imageDto.getData().getWidth()));
         assertThat(response.jsonPath().get("data.height"), equalTo(imageDto.getData().getHeight()));
         assertThat(response.jsonPath().get("data.favorite"), equalTo(imageDto.getData().getFavorite()));
-        //негативные ассерты
-//        if (statusCode == 404) {
-//            assertThat(response.header("content-type").contains("text/html"), equalTo(true));
-//        }
     }
 
     private void favoriteImagePositive(ImageResponseDto imageDto) {
-        Response response = favoriteImageRequest(imageDto);
-        assertThat(response.statusCode(), equalTo(200));
+        Response response = favoriteImageRequest(requestSpecAuth, responsePositiveSpec, imageDto);
         FavoriteResponseDto favoriteDto = response.getBody().as(FavoriteResponseDto.class);
         if (!imageDto.getData().getFavorite()) {
             assertThat(favoriteDto.getData(), equalTo("favorited"));
@@ -241,38 +312,31 @@ public class ImageTests extends BaseTest {
     }
 
     private void updateImagePositive(String title, String description, ImageResponseDto imageDto) {
-        Response response = updateImageInfoRequest(imageDto);
-        assertThat(response.statusCode(), equalTo(200));
-        assertThat(response.jsonPath().get("success"), equalTo(true));
+        Response response = updateImageInfoRequest(
+                new RequestSpecBuilder()
+                        .addMultiPart(
+                                new MultiPartSpecBuilder(imageDto.getData().getTitle())
+                                        .charset(StandardCharsets.UTF_8)
+                                        .controlName("title")
+                                        .build()
+                        )
+                        .addMultiPart(
+                                new MultiPartSpecBuilder(imageDto.getData().getTitle())
+                                        .charset(StandardCharsets.UTF_8)
+                                        .controlName("description")
+                                        .build()
+                        )
+                        .build(),
+                responsePositiveSpec,
+                imageDto
+        );
         assertThat(response.jsonPath().get("data"), equalTo(true));
         imageDto.getData().setTitle(title);
         imageDto.getData().setDescription(description);
-        //негативные ассерты
-//        if (statusCode == 404) {
-//            assertThat(response.header("content-type").contains("text/html"), equalTo(true));
-//        }
     }
 
     private void deleteImagePositive(ImageResponseDto imageDto) {
-        Response response = deleteImageRequest(imageDto);
-        assertThat(response.jsonPath().get("status"), equalTo(200));
+        Response response = deleteImageRequest(requestSpecAuth, responsePositiveSpec, imageDto);
         assertThat(response.jsonPath().get("data"), equalTo(true));
-        assertThat(response.jsonPath().get("success"), equalTo(true));
-    }
-
-    /**
-     *
-     * Ассерты для тестов
-     */
-
-    private void positiveUploadAssertsCode200(Response response) {
-        //        ImageDto imageDto = response.getBody().as(ImageDto.class);
-//        assertThat(imageDto.getSuccess(), equalTo(true));
-//        assertThat(imageDto.getData().getId(), is(notNullValue()));
-//        assertThat(imageDto.getData().getDeleteHash(), is(notNullValue()));
-//        return imageDto;
-        assertThat(response.jsonPath().get("success"), equalTo(true));
-        assertThat(response.jsonPath().get("data.id"), is(notNullValue()));
-        assertThat(response.jsonPath().get("data.deletehash"), is(notNullValue()));
     }
 }
