@@ -192,18 +192,17 @@ public class ImageTests extends BaseTest {
         favoriteNonExistImage(imageDto);
     }
 
-//    @Test
-//    public void deleteNonExistentImageTest() {
-//        ImageResponseDto imageDto = new ImageResponseDto();
-//        imageDto.setData(new ImageDataDto());
-//        imageDto.getData().setDeleteHash(RandomStringUtils.randomAlphanumeric(15));
-//        deleteNonExistentImage(imageDto);
-//    }
+    @Test
+    public void deleteNonExistentImageTest() {
+        ImageResponseDto imageDto = new ImageResponseDto();
+        imageDto.setData(new ImageDataDto());
+        imageDto.getData().setDeleteHash(RandomStringUtils.randomAlphanumeric(15));
+        deleteNonExistentImage(imageDto);
+    }
 
     /**
-     * Тестовые методы для негативных тестов
+     * Методы для негативных тестов
      */
-
 
     private void uploadUnknownFormatNegative(File file) {
         Response response = uploadImageRequest(
@@ -226,54 +225,53 @@ public class ImageTests extends BaseTest {
     }
 
     private void updateNonExistentImage(ImageResponseDto imageDto) {
-        Response response = updateImageInfoRequest(
+        updateImageInfoRequest(
                 new RequestSpecBuilder()
                         .addRequestSpecification(requestSpecAuth)
                         .build(),
                 new ResponseSpecBuilder()
-                        .expectStatusCode(404)
+                        .addResponseSpecification(response404Spec)
                         .build(),
                 imageDto);
-        assertThat(response.header("content-type").contains("text/html"), equalTo(true));
     }
 
     private void getNonExistentImage(ImageResponseDto imageDto) {
-        Response response = getImageRequest(
+        getImageRequest(
                 new RequestSpecBuilder()
                         .addRequestSpecification(requestSpecAuth)
                         .build(),
                 new ResponseSpecBuilder()
-                        .expectStatusCode(404)
+                        .addResponseSpecification(response404Spec)
                         .build(),
                 imageDto
         );
-        assertThat(response.header("content-type").contains("text/html"), equalTo(true));
     }
 
     private void favoriteNonExistImage(ImageResponseDto imageDto) {
-        Response response = favoriteImageRequest(
+        favoriteImageRequest(
                 new RequestSpecBuilder()
                         .addRequestSpecification(requestSpecAuth)
                         .build(),
                 new ResponseSpecBuilder()
-                        .expectStatusCode(404)
+                        .addResponseSpecification(response404Spec)
                         .build(),
                 imageDto
         );
-        assertThat(response.header("content-type").contains("text/html"), equalTo(true));
     }
 
-//    TODO: rewrite
-//    public void deleteNonExistentImage(ImageResponseDto imageDto) {
-//        Response response = deleteImageRequest(
-//                requestSpecAuth,
-//                new ResponseSpecBuilder()
-//                        .expectStatusCode(200)
-//                        .build(),
-//                imageDto
-//        );
-//        assertThat(response.header("content-type").contains("text/html"), equalTo(true));
-//    }
+    /* Сервис возвращает успешное удаление даже для несуществующих id */
+    public void deleteNonExistentImage(ImageResponseDto imageDto) {
+        deleteImageRequest(
+                new RequestSpecBuilder()
+                        .addRequestSpecification(requestSpecAuth)
+                        .build(),
+                new ResponseSpecBuilder()
+                        .addResponseSpecification(responsePositiveSpec)
+                        .addResponseSpecification(responseDataTrueSpec)
+                        .build(),
+                imageDto
+        );
+    }
 
     /**
      * Методы для позитивных тестов
@@ -328,7 +326,7 @@ public class ImageTests extends BaseTest {
     }
 
     private void updateImagePositive(ImageResponseDto imageDto) {
-        Response response = updateImageInfoRequest(
+        updateImageInfoRequest(
                 new RequestSpecBuilder()
                         .addRequestSpecification(requestSpecAuth)
                         .addMultiPart(
@@ -346,21 +344,21 @@ public class ImageTests extends BaseTest {
                         .build(),
                 new ResponseSpecBuilder()
                         .addResponseSpecification(responsePositiveSpec)
+                        .addResponseSpecification(responseDataTrueSpec)
                         .build(),
                 imageDto
         );
-        assertThat(response.jsonPath().get("data"), equalTo(true));
     }
 
     private void deleteImagePositive(ImageResponseDto imageDto) {
-        Response response = deleteImageRequest(
+        deleteImageRequest(
                 new RequestSpecBuilder()
                         .addRequestSpecification(requestSpecAuth)
                         .build(),
                 new ResponseSpecBuilder()
                         .addResponseSpecification(responsePositiveSpec)
+                        .addResponseSpecification(responseDataTrueSpec)
                         .build(),
                 imageDto);
-        assertThat(response.jsonPath().get("data"), equalTo(true));
     }
 }

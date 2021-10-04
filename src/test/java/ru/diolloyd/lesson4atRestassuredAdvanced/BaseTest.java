@@ -16,7 +16,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.util.Properties;
 
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 import static org.hamcrest.core.IsEqual.equalTo;
 
 public abstract class BaseTest {
@@ -25,6 +25,8 @@ public abstract class BaseTest {
     protected static String username;
     protected static RequestSpecification requestSpecAuth;
     protected static ResponseSpecification responsePositiveSpec;
+    protected static ResponseSpecification responseDataTrueSpec;
+    protected static ResponseSpecification response404Spec;
     protected final File JPG_HD_IMAGE = new File("src/test/resources/Cruella.jpg");
     protected final File BMP_1x1_IMAGE = new File("src/test/resources/pic1x1.bmp");
     protected final File PNG_IMAGE = new File("src/test/resources/Carl-meme.png");
@@ -48,6 +50,12 @@ public abstract class BaseTest {
                 .expectBody("success", is(true))
                 .expectContentType(ContentType.JSON)
                 .build();
-
+        responseDataTrueSpec = new ResponseSpecBuilder()
+                .expectBody("data", equalTo(true))
+                .build();
+        response404Spec = new ResponseSpecBuilder()
+                .expectStatusCode(404)
+                .expectContentType(ContentType.HTML)
+                .build();
     }
 }
