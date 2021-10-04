@@ -2,13 +2,17 @@ package ru.diolloyd.lesson4atRestassuredAdvanced.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonRootName;
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
+@Accessors(chain = true)
+//@JsonRootName("data")
 public class ImageDataDto {
     @JsonProperty("id")
-    protected String imageId;
+    private String imageId;
     @JsonProperty("deletehash")
     private String deleteHash;
     private String title;

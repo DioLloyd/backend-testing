@@ -5,6 +5,8 @@ import io.restassured.specification.RequestSpecification;
 import io.restassured.specification.ResponseSpecification;
 import ru.diolloyd.lesson4atRestassuredAdvanced.dto.ImageResponseDto;
 
+import java.util.Map;
+
 import static io.restassured.RestAssured.given;
 import static ru.diolloyd.lesson4atRestassuredAdvanced.Endpoints.*;
 
@@ -40,7 +42,15 @@ public class ApiUtilsCommon {
 
     public static Response deleteImageRequest(RequestSpecification requestSpec, ResponseSpecification responseSpec, ImageResponseDto imageDto) {
         return given(requestSpec, responseSpec)
-                .delete(DELETE_IMAGE, imageDto.getData().getDeleteHash())
+                .delete(DELETE_IMAGE, Map.of(IMAGE_DELETE_HASH_PARAM, imageDto.getData().getDeleteHash()))
                 .prettyPeek();
+
+//        return given()
+//                .spec(requestSpec)
+//                .delete(DELETE_IMAGE, Map.of(IMAGE_DELETE_HASH_PARAM, imageDto.getData().getDeleteHash()))
+//                .prettyPeek()
+//                .then()
+//                .spec(responseSpec)
+//                .extract().response();
     }
 }
