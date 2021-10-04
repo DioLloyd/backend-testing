@@ -1,4 +1,4 @@
-package ru.diolloyd.lesson4atRestassuredAdvanced;
+package ru.diolloyd.lesson4atRestassuredAdvanced.model;
 
 public class Endpoints {
     public static final String UPLOAD_IMAGE = "/image";

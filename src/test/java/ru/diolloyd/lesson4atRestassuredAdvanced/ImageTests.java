@@ -6,11 +6,10 @@ import io.restassured.builder.ResponseSpecBuilder;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
-import ru.diolloyd.lesson4atRestassuredAdvanced.dto.FavoriteResponseDto;
-import ru.diolloyd.lesson4atRestassuredAdvanced.dto.ImageDataDto;
-import ru.diolloyd.lesson4atRestassuredAdvanced.dto.ImageResponseDto;
+import ru.diolloyd.lesson4atRestassuredAdvanced.model.dto.FavoriteResponseDto;
+import ru.diolloyd.lesson4atRestassuredAdvanced.model.dto.ImageDataDto;
+import ru.diolloyd.lesson4atRestassuredAdvanced.model.dto.ImageResponseDto;
 
 import java.io.File;
 import java.nio.charset.StandardCharsets;
@@ -20,8 +19,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.hamcrest.core.IsNull.notNullValue;
 import static ru.diolloyd.lesson4atRestassuredAdvanced.ApiUtilsCommon.*;
-import static ru.diolloyd.lesson4atRestassuredAdvanced.dto.FavoriteDataDto.FAVORITED;
-import static ru.diolloyd.lesson4atRestassuredAdvanced.dto.FavoriteDataDto.UNFAVORITED;
+import static ru.diolloyd.lesson4atRestassuredAdvanced.model.dto.FavoriteDataDto.FAVORITED;
+import static ru.diolloyd.lesson4atRestassuredAdvanced.model.dto.FavoriteDataDto.UNFAVORITED;
 
 public class ImageTests extends BaseTest {
 
@@ -31,22 +30,21 @@ public class ImageTests extends BaseTest {
 
     @Test
     public void uploadHdJpgImageTest() {
-        ImageResponseDto imageDto = uploadImagePositive(JPG_HD_IMAGE);
+        ImageDataDto imageDto = uploadImagePositive(JPG_HD_IMAGE);
         deleteImagePositive(imageDto);
     }
 
     @Test
     public void getHdJpgImageTest() {
-        ImageResponseDto imageDto = uploadImagePositive(JPG_HD_IMAGE);
+        ImageDataDto imageDto = uploadImagePositive(JPG_HD_IMAGE);
         getImagePositive(imageDto);
         deleteImagePositive(imageDto);
     }
 
     @Test
     public void updateHdJpgImageInfoTest() {
-        ImageResponseDto imageDto = uploadImagePositive(JPG_HD_IMAGE);
-        imageDto.getData()
-                .setTitle("Это HD JPG картинка")
+        ImageDataDto imageDto = uploadImagePositive(JPG_HD_IMAGE);
+        imageDto.setTitle("Это HD JPG картинка")
                 .setDescription("Это описание HD JPG картинки");
         updateImagePositive(imageDto);
         getImagePositive(imageDto);
@@ -55,7 +53,7 @@ public class ImageTests extends BaseTest {
 
     @Test
     public void favoriteHdJpgImageTest() {
-        ImageResponseDto imageDto = uploadImagePositive(JPG_HD_IMAGE);
+        ImageDataDto imageDto = uploadImagePositive(JPG_HD_IMAGE);
         favoriteImagePositive(imageDto);
         getImagePositive(imageDto);
         deleteImagePositive(imageDto);
@@ -63,22 +61,21 @@ public class ImageTests extends BaseTest {
 
     @Test
     public void upload1x1bmpImageTest() {
-        ImageResponseDto imageDto = uploadImagePositive(BMP_1x1_IMAGE);
+        ImageDataDto imageDto = uploadImagePositive(BMP_1x1_IMAGE);
         deleteImagePositive(imageDto);
     }
 
     @Test
     public void get1x1bmpImageTest() {
-        ImageResponseDto imageDto = uploadImagePositive(BMP_1x1_IMAGE);
+        ImageDataDto imageDto = uploadImagePositive(BMP_1x1_IMAGE);
         getImagePositive(imageDto);
         deleteImagePositive(imageDto);
     }
 
     @Test
     public void update1x1bmpImageInfoTest() {
-        ImageResponseDto imageDto = uploadImagePositive(BMP_1x1_IMAGE);
-        imageDto.getData()
-                .setTitle("Это BMP картинка 1x1px")
+        ImageDataDto imageDto = uploadImagePositive(BMP_1x1_IMAGE);
+        imageDto.setTitle("Это BMP картинка 1x1px")
                 .setDescription("Это описание BMP картинки 1x1px");
         updateImagePositive(imageDto);
         getImagePositive(imageDto);
@@ -87,7 +84,7 @@ public class ImageTests extends BaseTest {
 
     @Test
     public void favorite1x1bmpImageTest() {
-        ImageResponseDto imageDto = uploadImagePositive(BMP_1x1_IMAGE);
+        ImageDataDto imageDto = uploadImagePositive(BMP_1x1_IMAGE);
         favoriteImagePositive(imageDto);
         getImagePositive(imageDto);
         deleteImagePositive(imageDto);
@@ -95,22 +92,21 @@ public class ImageTests extends BaseTest {
 
     @Test
     public void uploadPngImageTest() {
-        ImageResponseDto imageDto = uploadImagePositive(PNG_IMAGE);
+        ImageDataDto imageDto = uploadImagePositive(PNG_IMAGE);
         deleteImagePositive(imageDto);
     }
 
     @Test
     public void getPngImageTest() {
-        ImageResponseDto imageDto = uploadImagePositive(PNG_IMAGE);
+        ImageDataDto imageDto = uploadImagePositive(PNG_IMAGE);
         getImagePositive(imageDto);
         deleteImagePositive(imageDto);
     }
 
     @Test
     public void updatePngImageInfoTest() {
-        ImageResponseDto imageDto = uploadImagePositive(PNG_IMAGE);
-        imageDto.getData()
-                .setTitle("Это PNG картинка")
+        ImageDataDto imageDto = uploadImagePositive(PNG_IMAGE);
+        imageDto.setTitle("Это PNG картинка")
                 .setDescription("Это описание PNG картинки");
         updateImagePositive(imageDto);
         getImagePositive(imageDto);
@@ -119,7 +115,7 @@ public class ImageTests extends BaseTest {
 
     @Test
     public void favoritePngImageTest() {
-        ImageResponseDto imageDto = uploadImagePositive(PNG_IMAGE);
+        ImageDataDto imageDto = uploadImagePositive(PNG_IMAGE);
         favoriteImagePositive(imageDto);
         getImagePositive(imageDto);
         deleteImagePositive(imageDto);
@@ -127,22 +123,21 @@ public class ImageTests extends BaseTest {
 
     @Test
     public void uploadGifImageTest() {
-        ImageResponseDto imageDto = uploadImagePositive(GIF_IMAGE);
+        ImageDataDto imageDto = uploadImagePositive(GIF_IMAGE);
         deleteImagePositive(imageDto);
     }
 
     @Test
     public void getGifImageTest() {
-        ImageResponseDto imageDto = uploadImagePositive(GIF_IMAGE);
+        ImageDataDto imageDto = uploadImagePositive(GIF_IMAGE);
         getImagePositive(imageDto);
         deleteImagePositive(imageDto);
     }
 
     @Test
     public void updateGifImageInfoTest() {
-        ImageResponseDto imageDto = uploadImagePositive(PNG_IMAGE);
-        imageDto.getData()
-                .setTitle("Это GIF изображение")
+        ImageDataDto imageDto = uploadImagePositive(PNG_IMAGE);
+        imageDto.setTitle("Это GIF изображение")
                 .setDescription("Это описание GIF изображения");
         updateImagePositive(imageDto);
         getImagePositive(imageDto);
@@ -151,7 +146,7 @@ public class ImageTests extends BaseTest {
 
     @Test
     public void favoriteGifImageTest() {
-        ImageResponseDto imageDto = uploadImagePositive(GIF_IMAGE);
+        ImageDataDto imageDto = uploadImagePositive(GIF_IMAGE);
         favoriteImagePositive(imageDto);
         getImagePositive(imageDto);
         deleteImagePositive(imageDto);
@@ -173,7 +168,7 @@ public class ImageTests extends BaseTest {
         imageDto.getData().setImageId(RandomStringUtils.randomAlphanumeric(7));
         imageDto.getData().setTitle("");
         imageDto.getData().setDescription("");
-        updateNonExistentImage(imageDto);
+        updateNonExistentImage(imageDto.getData());
     }
 
     @Test
@@ -181,7 +176,7 @@ public class ImageTests extends BaseTest {
         ImageResponseDto imageDto = new ImageResponseDto();
         imageDto.setData(new ImageDataDto());
         imageDto.getData().setImageId(RandomStringUtils.randomAlphanumeric(7));
-        getNonExistentImage(imageDto);
+        getNonExistentImage(imageDto.getData());
     }
 
     @Test
@@ -189,7 +184,7 @@ public class ImageTests extends BaseTest {
         ImageResponseDto imageDto = new ImageResponseDto();
         imageDto.setData(new ImageDataDto());
         imageDto.getData().setImageId(RandomStringUtils.randomAlphanumeric(7));
-        favoriteNonExistImage(imageDto);
+        favoriteNonExistImage(imageDto.getData());
     }
 
     @Test
@@ -197,7 +192,16 @@ public class ImageTests extends BaseTest {
         ImageResponseDto imageDto = new ImageResponseDto();
         imageDto.setData(new ImageDataDto());
         imageDto.getData().setDeleteHash(RandomStringUtils.randomAlphanumeric(15));
-        deleteNonExistentImage(imageDto);
+        deleteNonExistentImage(imageDto.getData());
+    }
+
+    /**
+     * Негативные тесты неавторизованным пользователем
+     */
+
+    @Test
+    public void uploadImageNonAuthUserTest() {
+
     }
 
     /**
@@ -213,7 +217,7 @@ public class ImageTests extends BaseTest {
                 new ResponseSpecBuilder()
                         .expectStatusCode(400)
                         .expectBody("status", equalTo(400))
-                        .expectBody("success", Matchers.is(false))
+                        .expectBody("success", is(false))
                         .expectContentType(ContentType.JSON)
                         .build()
         );
@@ -224,7 +228,7 @@ public class ImageTests extends BaseTest {
         assertThat(response.jsonPath().get("data.error.type"), equalTo("ImgurException"));
     }
 
-    private void updateNonExistentImage(ImageResponseDto imageDto) {
+    private void updateNonExistentImage(ImageDataDto imageDto) {
         updateImageInfoRequest(
                 new RequestSpecBuilder()
                         .addRequestSpecification(requestSpecAuth)
@@ -235,7 +239,7 @@ public class ImageTests extends BaseTest {
                 imageDto);
     }
 
-    private void getNonExistentImage(ImageResponseDto imageDto) {
+    private void getNonExistentImage(ImageDataDto imageDto) {
         getImageRequest(
                 new RequestSpecBuilder()
                         .addRequestSpecification(requestSpecAuth)
@@ -247,7 +251,7 @@ public class ImageTests extends BaseTest {
         );
     }
 
-    private void favoriteNonExistImage(ImageResponseDto imageDto) {
+    private void favoriteNonExistImage(ImageDataDto imageDto) {
         favoriteImageRequest(
                 new RequestSpecBuilder()
                         .addRequestSpecification(requestSpecAuth)
@@ -259,8 +263,25 @@ public class ImageTests extends BaseTest {
         );
     }
 
+    private void uploadImageNonAuthUser(File file) {
+        Response response = uploadImageRequest(
+                new RequestSpecBuilder()
+                        .addMultiPart("image", file)
+                        .build(),
+                new ResponseSpecBuilder()
+                        .expectStatusCode(401)
+                        .expectBody("status", equalTo(401))
+                        .expectBody("success", is(false))
+                        .expectContentType(ContentType.JSON)
+                        .build()
+        );
+        assertThat(response.jsonPath().get("data.request"), equalTo("/3/image"));
+        assertThat(response.jsonPath().get("data.method"), equalTo("POST"));
+        assertThat(response.jsonPath().get("data.error"), equalTo("Authentication required"));
+    }
+
     /* Сервис возвращает успешное удаление даже для несуществующих id */
-    public void deleteNonExistentImage(ImageResponseDto imageDto) {
+    public void deleteNonExistentImage(ImageDataDto imageDto) {
         deleteImageRequest(
                 new RequestSpecBuilder()
                         .addRequestSpecification(requestSpecAuth)
@@ -277,7 +298,7 @@ public class ImageTests extends BaseTest {
      * Методы для позитивных тестов
      */
 
-    private ImageResponseDto uploadImagePositive(File file) {
+    private ImageDataDto uploadImagePositive(File file) {
         Response response = uploadImageRequest(
                 new RequestSpecBuilder()
                         .addRequestSpecification(requestSpecAuth)
@@ -290,10 +311,10 @@ public class ImageTests extends BaseTest {
         ImageResponseDto imageDto = response.getBody().as(ImageResponseDto.class);
         assertThat(imageDto.getData().getImageId(), is(notNullValue()));
         assertThat(imageDto.getData().getDeleteHash(), is(notNullValue()));
-        return imageDto;
+        return imageDto.getData();
     }
 
-    private void getImagePositive(ImageResponseDto imageDto) {
+    private void getImagePositive(ImageDataDto imageDto) {
         Response response = getImageRequest(
                 new RequestSpecBuilder()
                         .addRequestSpecification(requestSpecAuth)
@@ -302,11 +323,11 @@ public class ImageTests extends BaseTest {
                         .addResponseSpecification(responsePositiveSpec)
                         .build(),
                 imageDto);
-        ImageResponseDto imageResponseDto = response.getBody().as(ImageResponseDto.class);
-        assertThat(imageResponseDto, equalTo(imageDto));
+        ImageDataDto imageResponseDataDto = response.getBody().as(ImageResponseDto.class).getData();
+        assertThat(imageResponseDataDto, equalTo(imageDto));
     }
 
-    private void favoriteImagePositive(ImageResponseDto imageDto) {
+    private void favoriteImagePositive(ImageDataDto imageDto) {
         Response response = favoriteImageRequest(
                 new RequestSpecBuilder()
                         .addRequestSpecification(requestSpecAuth)
@@ -316,27 +337,27 @@ public class ImageTests extends BaseTest {
                         .build(),
                 imageDto);
         FavoriteResponseDto favoriteDto = response.getBody().as(FavoriteResponseDto.class);
-        if (!imageDto.getData().getFavorite()) {
+        if (!imageDto.getFavorite()) {
             assertThat(favoriteDto.getData(), equalTo(FAVORITED.getValue()));
-            imageDto.getData().setFavorite(true);
-        } else if (imageDto.getData().getFavorite()) {
+            imageDto.setFavorite(true);
+        } else if (imageDto.getFavorite()) {
             assertThat(favoriteDto.getData(), equalTo(UNFAVORITED.getValue()));
-            imageDto.getData().setFavorite(false);
+            imageDto.setFavorite(false);
         }
     }
 
-    private void updateImagePositive(ImageResponseDto imageDto) {
+    private void updateImagePositive(ImageDataDto imageDto) {
         updateImageInfoRequest(
                 new RequestSpecBuilder()
                         .addRequestSpecification(requestSpecAuth)
                         .addMultiPart(
-                                new MultiPartSpecBuilder(imageDto.getData().getTitle())
+                                new MultiPartSpecBuilder(imageDto.getTitle())
                                         .charset(StandardCharsets.UTF_8)
                                         .controlName("title")
                                         .build()
                         )
                         .addMultiPart(
-                                new MultiPartSpecBuilder(imageDto.getData().getDescription())
+                                new MultiPartSpecBuilder(imageDto.getDescription())
                                         .charset(StandardCharsets.UTF_8)
                                         .controlName("description")
                                         .build()
@@ -350,7 +371,7 @@ public class ImageTests extends BaseTest {
         );
     }
 
-    private void deleteImagePositive(ImageResponseDto imageDto) {
+    private void deleteImagePositive(ImageDataDto imageDto) {
         deleteImageRequest(
                 new RequestSpecBuilder()
                         .addRequestSpecification(requestSpecAuth)
