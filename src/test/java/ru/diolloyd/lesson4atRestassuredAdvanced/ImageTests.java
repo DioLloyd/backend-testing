@@ -227,7 +227,9 @@ public class ImageTests extends BaseTest {
 
     private void updateNonExistentImage(ImageResponseDto imageDto) {
         Response response = updateImageInfoRequest(
-                requestSpecAuth,
+                new RequestSpecBuilder()
+                        .addRequestSpecification(requestSpecAuth)
+                        .build(),
                 new ResponseSpecBuilder()
                         .expectStatusCode(404)
                         .build(),
@@ -237,7 +239,9 @@ public class ImageTests extends BaseTest {
 
     private void getNonExistentImage(ImageResponseDto imageDto) {
         Response response = getImageRequest(
-                requestSpecAuth,
+                new RequestSpecBuilder()
+                        .addRequestSpecification(requestSpecAuth)
+                        .build(),
                 new ResponseSpecBuilder()
                         .expectStatusCode(404)
                         .build(),
@@ -248,7 +252,9 @@ public class ImageTests extends BaseTest {
 
     private void favoriteNonExistImage(ImageResponseDto imageDto) {
         Response response = favoriteImageRequest(
-                requestSpecAuth,
+                new RequestSpecBuilder()
+                        .addRequestSpecification(requestSpecAuth)
+                        .build(),
                 new ResponseSpecBuilder()
                         .expectStatusCode(404)
                         .build(),
@@ -270,7 +276,7 @@ public class ImageTests extends BaseTest {
 //    }
 
     /**
-     * Тестовые методы для позитивных тестов
+     * Методы для позитивных тестов
      */
 
     private ImageResponseDto uploadImagePositive(File file) {
@@ -279,7 +285,9 @@ public class ImageTests extends BaseTest {
                         .addRequestSpecification(requestSpecAuth)
                         .addMultiPart("image", file)
                         .build(),
-                responsePositiveSpec
+                new ResponseSpecBuilder()
+                        .addResponseSpecification(responsePositiveSpec)
+                        .build()
         );
         ImageResponseDto imageDto = response.getBody().as(ImageResponseDto.class);
         assertThat(imageDto.getData().getImageId(), is(notNullValue()));
@@ -288,13 +296,27 @@ public class ImageTests extends BaseTest {
     }
 
     private void getImagePositive(ImageResponseDto imageDto) {
-        Response response = getImageRequest(requestSpecAuth, responsePositiveSpec, imageDto);
+        Response response = getImageRequest(
+                new RequestSpecBuilder()
+                        .addRequestSpecification(requestSpecAuth)
+                        .build(),
+                new ResponseSpecBuilder()
+                        .addResponseSpecification(responsePositiveSpec)
+                        .build(),
+                imageDto);
         ImageResponseDto imageResponseDto = response.getBody().as(ImageResponseDto.class);
         assertThat(imageResponseDto, equalTo(imageDto));
     }
 
     private void favoriteImagePositive(ImageResponseDto imageDto) {
-        Response response = favoriteImageRequest(requestSpecAuth, responsePositiveSpec, imageDto);
+        Response response = favoriteImageRequest(
+                new RequestSpecBuilder()
+                        .addRequestSpecification(requestSpecAuth)
+                        .build(),
+                new ResponseSpecBuilder()
+                        .addResponseSpecification(responsePositiveSpec)
+                        .build(),
+                imageDto);
         FavoriteResponseDto favoriteDto = response.getBody().as(FavoriteResponseDto.class);
         if (!imageDto.getData().getFavorite()) {
             assertThat(favoriteDto.getData(), equalTo(FAVORITED.getValue()));
@@ -322,14 +344,23 @@ public class ImageTests extends BaseTest {
                                         .build()
                         )
                         .build(),
-                responsePositiveSpec,
+                new ResponseSpecBuilder()
+                        .addResponseSpecification(responsePositiveSpec)
+                        .build(),
                 imageDto
         );
         assertThat(response.jsonPath().get("data"), equalTo(true));
     }
 
     private void deleteImagePositive(ImageResponseDto imageDto) {
-        Response response = deleteImageRequest(requestSpecAuth, responsePositiveSpec, imageDto);
+        Response response = deleteImageRequest(
+                new RequestSpecBuilder()
+                        .addRequestSpecification(requestSpecAuth)
+                        .build(),
+                new ResponseSpecBuilder()
+                        .addResponseSpecification(responsePositiveSpec)
+                        .build(),
+                imageDto);
         assertThat(response.jsonPath().get("data"), equalTo(true));
     }
 }

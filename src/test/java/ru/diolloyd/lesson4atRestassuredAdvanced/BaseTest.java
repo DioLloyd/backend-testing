@@ -23,7 +23,7 @@ public abstract class BaseTest {
     protected static final File file = new File("src/test/resources/application.properties");
     protected static final Properties properties = new Properties();
     protected static String username;
-    public static RequestSpecification requestSpecAuth;
+    protected static RequestSpecification requestSpecAuth;
     protected static ResponseSpecification responsePositiveSpec;
     protected final File JPG_HD_IMAGE = new File("src/test/resources/Cruella.jpg");
     protected final File BMP_1x1_IMAGE = new File("src/test/resources/pic1x1.bmp");
@@ -33,7 +33,6 @@ public abstract class BaseTest {
 
     @SneakyThrows
     @BeforeAll
-//    @BeforeEach
     public static void beforeAll() {
         properties.load(new FileReader(file));
         RestAssured.enableLoggingOfRequestAndResponseIfValidationFails(); //TODO посмотерть логи без этой строчки
@@ -49,5 +48,6 @@ public abstract class BaseTest {
                 .expectBody("success", is(true))
                 .expectContentType(ContentType.JSON)
                 .build();
+
     }
 }
