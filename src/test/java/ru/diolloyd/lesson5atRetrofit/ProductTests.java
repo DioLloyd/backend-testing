@@ -17,10 +17,11 @@ import java.util.ArrayList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.IsEqual.equalTo;
 
 public class ProductTests {
     private static ProductService productService;
-    private Product product;
+//    private Product product;
     private final Faker faker = new Faker();
 
     @BeforeAll
@@ -46,6 +47,23 @@ public class ProductTests {
         assertThat(response.isSuccessful(), is(true));
         assertThat(response.body(), is(notNullValue()));
         deleteRequest(response.body().getId());
+    }
+
+    @SneakyThrows
+    @Test
+    void getProductTest() {
+        Response<Product> createResponse = productService
+                .createProduct(getProduct())
+                .execute();
+        assertThat(createResponse.isSuccessful(), is(true));
+        assertThat(createResponse.body(), is(notNullValue()));
+        Response<Product> getResponse = productService
+                .getProduct(createResponse.body().getId())
+                .execute();
+        assertThat(getResponse.isSuccessful(), is(true));
+        assertThat(getResponse.body(), is(notNullValue()));
+        assertThat(createResponse.body(), equalTo(getResponse.body()));
+        deleteRequest(createResponse.body().getId());
     }
 
     /* Тест будет падать, ошибка в сервисе */
