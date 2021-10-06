@@ -6,7 +6,7 @@ import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 
-import java.time.Duration;
+import static okhttp3.logging.HttpLoggingInterceptor.Level.BODY;
 
 @UtilityClass
 public class RetrofitUtils {
@@ -14,8 +14,7 @@ public class RetrofitUtils {
 
     public Retrofit getRetrofit() {
         OkHttpClient client = new OkHttpClient.Builder()
-                .connectTimeout(Duration.ofMinutes(1L))
-                .addInterceptor(logging.setLevel(HttpLoggingInterceptor.Level.BASIC))
+                .addInterceptor(logging.setLevel(BODY))
                 .build();
         return new Retrofit.Builder()
                 .client(client)

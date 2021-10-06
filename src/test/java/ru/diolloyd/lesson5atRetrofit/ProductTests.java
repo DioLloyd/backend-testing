@@ -12,10 +12,13 @@ import ru.diolloyd.lesson5atRetrofit.enums.CategoryType;
 import ru.diolloyd.lesson5atRetrofit.service.ProductService;
 import ru.diolloyd.lesson5atRetrofit.utils.RetrofitUtils;
 
-import static org.hamcrest.CoreMatchers.*;
+import java.util.ArrayList;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-public class CreateProductTest {
+public class ProductTests {
     private static ProductService productService;
     private Product product;
     private final Faker faker = new Faker();
@@ -28,26 +31,43 @@ public class CreateProductTest {
 
     @BeforeEach
     void setUp() {
+//        product = new Product()
+//                .withTitle(faker.food().dish())
+//                .withCategoryTitle(CategoryType.FOOD.getTitle())
+//                .withPrice((int) (Math.random() * (10000 - 1000 + 1) + 1000));
         product = new Product()
-                .withTitle(faker.food().dish())
-                .withCategoryTitle(CategoryType.FOOD.getTitle())
-                .withPrice((int) (Math.random() * (10000 - 1000 + 1) + 1000));
+                .setTitle(faker.food().dish())
+                .setCategoryTitle(CategoryType.FOOD.getTitle())
+                .setPrice((int) (Math.random() * (10000 - 1000 + 1) + 1000));
     }
 
-    @Test
     @SneakyThrows
+    @Test
     void createProductFoodCategoryTest() {
         Response<Product> createResponse = productService
                 .createProduct(product)
                 .execute();
         assertThat(createResponse.isSuccessful(), is(true));
         assertThat(createResponse.body(), is(notNullValue()));
-        System.out.println(createResponse.body());
+        deleteRequest(createResponse.body().getId());
+    }
+
+    /* Тест будет падать, ошибка в сервисе */
+    @SneakyThrows
+    @Test
+    void getProductsTest() {
+        Response<ArrayList<Product>> products = productService
+                .getProducts()
+                .execute();
+        assertThat(products.body(), is(notNullValue()));
+        System.out.println(products.body().toString());
+    }
+
+    @SneakyThrows
+    private void deleteRequest(Integer id) {
         Response<ResponseBody> deleteResponse = productService
-                .deleteProduct(createResponse.body().getId())
+                .deleteProduct(id)
                 .execute();
         assertThat(deleteResponse.isSuccessful(), is(true));
-        System.out.println(deleteResponse);
-        System.out.println(deleteResponse.body());
     }
 }

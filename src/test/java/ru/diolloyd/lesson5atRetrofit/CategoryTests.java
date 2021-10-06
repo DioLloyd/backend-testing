@@ -12,7 +12,7 @@ import ru.diolloyd.lesson5atRetrofit.utils.RetrofitUtils;
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-public class GetCategoryTest {
+public class CategoryTests {
     private static CategoryService categoryService;
 
     @BeforeAll
