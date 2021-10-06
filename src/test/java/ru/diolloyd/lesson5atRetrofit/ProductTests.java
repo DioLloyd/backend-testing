@@ -38,6 +38,17 @@ public class ProductTests {
 //                .withPrice((int) (Math.random() * (10000 - 1000 + 1) + 1000));
 //    }
 
+    /* Тест будет падать, ошибка в сервисе */
+    @SneakyThrows
+    @Test
+    void getProductsTest() {
+        Response<ArrayList<Product>> products = productService
+                .getProducts()
+                .execute();
+        assertThat(products.body(), is(notNullValue()));
+        System.out.println(products.body().toString());
+    }
+
     @SneakyThrows
     @Test
     void createProductFoodCategoryTest() {
@@ -47,6 +58,25 @@ public class ProductTests {
         assertThat(response.isSuccessful(), is(true));
         assertThat(response.body(), is(notNullValue()));
         deleteRequest(response.body().getId());
+    }
+
+    @SneakyThrows
+    @Test
+    void modifyProductTest() {
+        Response<Product> createResponse = productService
+                .createProduct(getProduct())
+                .execute();
+        assertThat(createResponse.isSuccessful(), is(true));
+        assertThat(createResponse.body(), is(notNullValue()));
+        createResponse.body()
+                .setPrice((int) (Math.random() * (10000 - 1000 + 1) + 1000))
+                .setTitle(faker.food().dish());
+        Response<Product> modifyResponse = productService
+                .modifyProduct(createResponse.body())
+                .execute();
+        assertThat(modifyResponse.isSuccessful(), is(true));
+        assertThat(modifyResponse.body(), is(notNullValue()));
+        assertThat(createResponse.body(), equalTo(modifyResponse.body()));
     }
 
     @SneakyThrows
@@ -64,17 +94,6 @@ public class ProductTests {
         assertThat(getResponse.body(), is(notNullValue()));
         assertThat(createResponse.body(), equalTo(getResponse.body()));
         deleteRequest(createResponse.body().getId());
-    }
-
-    /* Тест будет падать, ошибка в сервисе */
-    @SneakyThrows
-    @Test
-    void getProductsTest() {
-        Response<ArrayList<Product>> products = productService
-                .getProducts()
-                .execute();
-        assertThat(products.body(), is(notNullValue()));
-        System.out.println(products.body().toString());
     }
 
     @SneakyThrows

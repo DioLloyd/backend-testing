@@ -12,11 +12,14 @@ public interface ProductService {
     @GET("products")
     Call<ArrayList<Product>> getProducts();
 
-    @GET("products/{id}")
-    Call<Product> getProduct(@Path("id") Integer id);
-
     @POST("products")
     Call<Product> createProduct(@Body Product product);
+
+    @PUT("products")
+    Call<Product> modifyProduct(@Body Product product);
+
+    @GET("products/{id}")
+    Call<Product> getProduct(@Path("id") Integer id);
 
     @DELETE("products/{id}")
     Call<ResponseBody> deleteProduct(@Path("id") Integer id);
