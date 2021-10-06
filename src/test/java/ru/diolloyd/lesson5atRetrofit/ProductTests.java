@@ -29,27 +29,23 @@ public class ProductTests {
                 .create(ProductService.class);
     }
 
-    @BeforeEach
-    void setUp() {
+//    @BeforeEach
+//    void setUp() {
 //        product = new Product()
 //                .withTitle(faker.food().dish())
 //                .withCategoryTitle(CategoryType.FOOD.getTitle())
 //                .withPrice((int) (Math.random() * (10000 - 1000 + 1) + 1000));
-        product = new Product()
-                .setTitle(faker.food().dish())
-                .setCategoryTitle(CategoryType.FOOD.getTitle())
-                .setPrice((int) (Math.random() * (10000 - 1000 + 1) + 1000));
-    }
+//    }
 
     @SneakyThrows
     @Test
     void createProductFoodCategoryTest() {
-        Response<Product> createResponse = productService
-                .createProduct(product)
+        Response<Product> response = productService
+                .createProduct(getProduct())
                 .execute();
-        assertThat(createResponse.isSuccessful(), is(true));
-        assertThat(createResponse.body(), is(notNullValue()));
-        deleteRequest(createResponse.body().getId());
+        assertThat(response.isSuccessful(), is(true));
+        assertThat(response.body(), is(notNullValue()));
+        deleteRequest(response.body().getId());
     }
 
     /* Тест будет падать, ошибка в сервисе */
@@ -69,5 +65,12 @@ public class ProductTests {
                 .deleteProduct(id)
                 .execute();
         assertThat(deleteResponse.isSuccessful(), is(true));
+    }
+
+    private Product getProduct() {
+        return new Product()
+                .setTitle(faker.food().dish())
+                .setCategoryTitle(CategoryType.FOOD.getTitle())
+                .setPrice((int) (Math.random() * (10000 - 1000 + 1) + 1000));
     }
 }
