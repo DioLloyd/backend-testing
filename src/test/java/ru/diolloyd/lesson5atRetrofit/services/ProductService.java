@@ -1,4 +1,4 @@
-package ru.diolloyd.lesson5atRetrofit.service;
+package ru.diolloyd.lesson5atRetrofit.services;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;

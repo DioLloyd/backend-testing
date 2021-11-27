@@ -1,12 +1,11 @@
 package ru.diolloyd.lesson5atRetrofit;
 
 import lombok.SneakyThrows;
-import org.hamcrest.CoreMatchers;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import retrofit2.Response;
 import ru.diolloyd.lesson5atRetrofit.dto.GetCategoryResponse;
-import ru.diolloyd.lesson5atRetrofit.service.CategoryService;
+import ru.diolloyd.lesson5atRetrofit.services.CategoryService;
 import ru.diolloyd.lesson5atRetrofit.utils.RetrofitUtils;
 
 import static org.hamcrest.CoreMatchers.*;
