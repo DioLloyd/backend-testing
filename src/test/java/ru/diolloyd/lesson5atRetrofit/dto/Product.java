@@ -29,44 +29,22 @@ public class Product {
     private String title;
     private Integer price;
     private String categoryTitle;
-    private static final Faker faker = new Faker();
+    public static final Faker faker = new Faker();
 
-    public static Product getProductByType(CategoryType type) {
-        switch (type) {
-            case FOOD:
-                return new Product()
-                        .setTitle(faker.food().dish())
-                        .setCategoryTitle(CategoryType.FOOD.getTitle())
-                        .setPrice((int) (Math.random() * (10000 - 1000 + 1) + 1000));
-            case ELECTRONIC:
-                return new Product()
-                        .setTitle("electric " + faker.aviation().aircraft())
-                        .setCategoryTitle(CategoryType.ELECTRONIC.getTitle())
-                        .setPrice((int) (Math.random() * (10000 - 1000 + 1) + 1000));
-            case FURNITURE:
-                return new Product()
-                        .setTitle(faker.color().name() + " commode")
-                        .setCategoryTitle(CategoryType.FURNITURE.getTitle())
-                        .setPrice((int) (Math.random() * (10000 - 1000 + 1) + 1000));
-        }
-        return null;
+    public static Product createProductByType(CategoryType type) {
+        return new Product()
+                .setTitle(type.getProductTitleGenerator().get())
+                .setCategoryTitle(type.getTitle())
+                .setPrice(generateRandomPrice());
     }
 
     public static Product modifyProductByType(Product product, CategoryType type) {
-        switch (type) {
-            case FOOD:
-                return product
-                        .setTitle(faker.food().dish())
-                        .setPrice((int) (Math.random() * (10000 - 1000 + 1) + 1000));
-            case ELECTRONIC:
-                return product
-                        .setTitle("electric " + faker.aviation().aircraft())
-                        .setPrice((int) (Math.random() * (10000 - 1000 + 1) + 1000));
-            case FURNITURE:
-                return product
-                        .setTitle(faker.color().name() + " commode")
-                        .setPrice((int) (Math.random() * (10000 - 1000 + 1) + 1000));
-        }
-        return null;
+        return product
+                .setTitle(type.getProductTitleGenerator().get())
+                .setPrice(generateRandomPrice());
+    }
+
+    private static int generateRandomPrice() {
+        return (int) (Math.random() * (10000 - 1000 + 1) + 1000);
     }
 }

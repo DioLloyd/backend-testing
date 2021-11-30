@@ -16,27 +16,28 @@ import java.util.ArrayList;
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsEqual.equalTo;
-import static ru.diolloyd.lesson5atRetrofit.dto.Product.getProductByType;
+import static ru.diolloyd.lesson5atRetrofit.dto.Product.createProductByType;
 import static ru.diolloyd.lesson5atRetrofit.dto.Product.modifyProductByType;
 
 public class ProductTests {
     private final ProductService productService = RetrofitUtils.getRetrofit().create(ProductService.class);
     ProductServiceRequests requests = new ProductServiceRequests(productService);
 
+    //TODO подумать над ассертами
     @Test
     void getProductsTest() {
         Response<ArrayList<Product>> products = requests.getProducts();
         assertThat(products.body(), is(notNullValue()));
-        assertThat(products.body().get(0).getId(), instanceOf(Integer.class));
-        assertThat(products.body().get(0).getTitle(), instanceOf(String.class));
-        assertThat(products.body().get(0).getPrice(), instanceOf(Integer.class));
-        assertThat(products.body().get(0).getCategoryTitle(), instanceOf(String.class));
+        assertThat(products.body().get(0).getId(), is(notNullValue()));
+        assertThat(products.body().get(0).getTitle(), is(notNullValue()));
+        assertThat(products.body().get(0).getPrice(), is(notNullValue()));
+        assertThat(products.body().get(0).getCategoryTitle(), is(notNullValue()));
     }
 
     @ParameterizedTest
     @EnumSource(CategoryType.class)
     void createProductTest(CategoryType type) {
-        Response<Product> response = requests.createProduct(getProductByType(type));
+        Response<Product> response = requests.createProduct(createProductByType(type));
         assertThat(response.isSuccessful(), is(true));
         assertThat(response.body(), is(notNullValue()));
         deleteRequest(response.body().getId());
@@ -45,7 +46,7 @@ public class ProductTests {
     @ParameterizedTest
     @EnumSource(CategoryType.class)
     void modifyProductTest(CategoryType type) {
-        Response<Product> createResponse = requests.createProduct(getProductByType(type));
+        Response<Product> createResponse = requests.createProduct(createProductByType(type));
         assertThat(createResponse.isSuccessful(), is(true));
         assertThat(createResponse.body(), is(notNullValue()));
         Response<Product> modifyResponse = requests.modifyProduct(
@@ -60,7 +61,7 @@ public class ProductTests {
     @ParameterizedTest
     @EnumSource(CategoryType.class)
     void getProductTest(CategoryType type) {
-        Response<Product> createResponse = requests.createProduct(getProductByType(type));
+        Response<Product> createResponse = requests.createProduct(createProductByType(type));
         assertThat(createResponse.isSuccessful(), is(true));
         assertThat(createResponse.body(), is(notNullValue()));
         Response<Product> getResponse = requests.getProduct(createResponse.body().getId());
