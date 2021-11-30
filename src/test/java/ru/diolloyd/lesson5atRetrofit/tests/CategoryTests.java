@@ -1,4 +1,4 @@
-package ru.diolloyd.lesson5atRetrofit;
+package ru.diolloyd.lesson5atRetrofit.tests;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
