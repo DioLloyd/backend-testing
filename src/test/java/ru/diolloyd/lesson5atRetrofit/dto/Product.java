@@ -3,6 +3,7 @@ package ru.diolloyd.lesson5atRetrofit.dto;
 import com.github.javafaker.Faker;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import ru.diolloyd.lesson5atRetrofit.enums.CategoryType;
@@ -20,6 +21,7 @@ import ru.diolloyd.lesson5atRetrofit.enums.CategoryType;
  * .withPrice((int) (Math.random() * (10000 - 1000 + 1) + 1000));
  */
 
+@NoArgsConstructor
 @Getter
 @Setter
 @Accessors(chain = true)

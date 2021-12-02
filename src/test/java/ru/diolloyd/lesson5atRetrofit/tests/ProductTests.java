@@ -23,7 +23,7 @@ import static ru.diolloyd.lesson5atRetrofit.dto.Product.modifyProductByType;
 public class ProductTests {
 
     private final ProductService productService = RetrofitUtils.getRetrofit().create(ProductService.class);
-    ProductServiceRequests requests = new ProductServiceRequests(productService);
+    private final ProductServiceRequests requests = new ProductServiceRequests(productService);
 
     @Test
     void getProductsTest() {

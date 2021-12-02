@@ -9,4 +9,6 @@ public class ErrorResponse {
     private Integer status;
     private String message;
     private Instant timestamp;
+    private String error;
+    private String path;
 }
