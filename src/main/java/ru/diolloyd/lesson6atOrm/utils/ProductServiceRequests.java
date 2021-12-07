@@ -1,11 +1,11 @@
-package ru.diolloyd.lesson5atRetrofit.utils;
+package ru.diolloyd.lesson6atOrm.utils;
 
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import okhttp3.ResponseBody;
 import retrofit2.Response;
-import ru.diolloyd.lesson5atRetrofit.dto.Product;
-import ru.diolloyd.lesson5atRetrofit.services.ProductService;
+import ru.diolloyd.lesson6atOrm.dto.Product;
+import ru.diolloyd.lesson6atOrm.services.ProductService;
 
 import java.util.ArrayList;
 

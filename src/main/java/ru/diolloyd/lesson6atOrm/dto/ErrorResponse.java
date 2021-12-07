@@ -1,4 +1,4 @@
-package ru.diolloyd.lesson5atRetrofit.dto;
+package ru.diolloyd.lesson6atOrm.dto;
 
 import lombok.Data;
 

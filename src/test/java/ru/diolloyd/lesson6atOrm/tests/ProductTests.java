@@ -1,15 +1,15 @@
-package ru.diolloyd.lesson5atRetrofit.tests;
+package ru.diolloyd.lesson6atOrm.tests;
 
 import okhttp3.ResponseBody;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import retrofit2.Response;
-import ru.diolloyd.lesson5atRetrofit.dto.Product;
-import ru.diolloyd.lesson5atRetrofit.enums.CategoryType;
-import ru.diolloyd.lesson5atRetrofit.services.ProductService;
-import ru.diolloyd.lesson5atRetrofit.utils.ProductServiceRequests;
-import ru.diolloyd.lesson5atRetrofit.utils.RetrofitUtils;
+import ru.diolloyd.lesson6atOrm.dto.Product;
+import ru.diolloyd.lesson6atOrm.enums.CategoryType;
+import ru.diolloyd.lesson6atOrm.services.ProductService;
+import ru.diolloyd.lesson6atOrm.utils.ProductServiceRequests;
+import ru.diolloyd.lesson6atOrm.utils.RetrofitUtils;
 
 import java.util.ArrayList;
 
@@ -17,8 +17,8 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsEqual.equalTo;
-import static ru.diolloyd.lesson5atRetrofit.dto.Product.createProductByType;
-import static ru.diolloyd.lesson5atRetrofit.dto.Product.modifyProductByType;
+import static ru.diolloyd.lesson6atOrm.dto.Product.createProductByType;
+import static ru.diolloyd.lesson6atOrm.dto.Product.modifyProductByType;
 
 public class ProductTests {
 

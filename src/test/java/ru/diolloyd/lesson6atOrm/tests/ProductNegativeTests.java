@@ -1,4 +1,4 @@
-package ru.diolloyd.lesson5atRetrofit.tests;
+package ru.diolloyd.lesson6atOrm.tests;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -10,12 +10,12 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import retrofit2.Response;
-import ru.diolloyd.lesson5atRetrofit.dto.ErrorResponse;
-import ru.diolloyd.lesson5atRetrofit.dto.Product;
-import ru.diolloyd.lesson5atRetrofit.enums.CategoryType;
-import ru.diolloyd.lesson5atRetrofit.services.ProductService;
-import ru.diolloyd.lesson5atRetrofit.utils.ProductServiceRequests;
-import ru.diolloyd.lesson5atRetrofit.utils.RetrofitUtils;
+import ru.diolloyd.lesson6atOrm.dto.ErrorResponse;
+import ru.diolloyd.lesson6atOrm.dto.Product;
+import ru.diolloyd.lesson6atOrm.enums.CategoryType;
+import ru.diolloyd.lesson6atOrm.services.ProductService;
+import ru.diolloyd.lesson6atOrm.utils.ProductServiceRequests;
+import ru.diolloyd.lesson6atOrm.utils.RetrofitUtils;
 
 import java.time.Instant;
 
@@ -26,8 +26,8 @@ public class ProductNegativeTests {
 
     private final ProductService productService = RetrofitUtils.getRetrofit().create(ProductService.class);
     private final ProductServiceRequests requests = new ProductServiceRequests(productService);
-    private long time;
     private final ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
+    private long time;
 
     @SneakyThrows
     @ParameterizedTest

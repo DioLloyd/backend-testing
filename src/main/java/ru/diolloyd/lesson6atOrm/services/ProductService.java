@@ -1,9 +1,9 @@
-package ru.diolloyd.lesson5atRetrofit.services;
+package ru.diolloyd.lesson6atOrm.services;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.*;
-import ru.diolloyd.lesson5atRetrofit.dto.Product;
+import ru.diolloyd.lesson6atOrm.dto.Product;
 
 import java.util.ArrayList;
 

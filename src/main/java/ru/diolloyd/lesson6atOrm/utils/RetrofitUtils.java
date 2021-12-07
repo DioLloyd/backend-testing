@@ -1,4 +1,4 @@
-package ru.diolloyd.lesson5atRetrofit.utils;
+package ru.diolloyd.lesson6atOrm.utils;
 
 import lombok.experimental.UtilityClass;
 import okhttp3.OkHttpClient;

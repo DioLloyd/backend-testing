@@ -1,4 +1,4 @@
-package ru.diolloyd.lesson5atRetrofit.dto;
+package ru.diolloyd.lesson6atOrm.dto;
 
 import com.github.javafaker.Faker;
 import lombok.EqualsAndHashCode;
@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import ru.diolloyd.lesson5atRetrofit.enums.CategoryType;
+import ru.diolloyd.lesson6atOrm.enums.CategoryType;
 
 /**
  * Альтернативное создание объекта с помощью аннотации @With

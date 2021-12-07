@@ -1,9 +1,9 @@
-package ru.diolloyd.lesson5atRetrofit.services;
+package ru.diolloyd.lesson6atOrm.services;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
-import ru.diolloyd.lesson5atRetrofit.dto.Category;
+import ru.diolloyd.lesson6atOrm.dto.Category;
 
 public interface CategoryService {
 

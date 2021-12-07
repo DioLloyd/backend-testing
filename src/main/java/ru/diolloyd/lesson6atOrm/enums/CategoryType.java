@@ -1,11 +1,11 @@
-package ru.diolloyd.lesson5atRetrofit.enums;
+package ru.diolloyd.lesson6atOrm.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.util.function.Supplier;
 
-import static ru.diolloyd.lesson5atRetrofit.dto.Product.faker;
+import static ru.diolloyd.lesson6atOrm.dto.Product.faker;
 
 @AllArgsConstructor
 @Getter
