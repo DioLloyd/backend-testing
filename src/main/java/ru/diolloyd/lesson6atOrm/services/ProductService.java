@@ -3,23 +3,23 @@ package ru.diolloyd.lesson6atOrm.services;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.*;
-import ru.diolloyd.lesson6atOrm.dto.Product;
+import ru.diolloyd.lesson6atOrm.dto.ProductDto;
 
 import java.util.ArrayList;
 
 public interface ProductService {
 
     @GET("products")
-    Call<ArrayList<Product>> getProducts();
+    Call<ArrayList<ProductDto>> getProducts();
 
     @POST("products")
-    Call<Product> createProduct(@Body Product product);
+    Call<ProductDto> createProduct(@Body ProductDto product);
 
     @PUT("products")
-    Call<Product> modifyProduct(@Body Product product);
+    Call<ProductDto> modifyProduct(@Body ProductDto product);
 
     @GET("products/{id}")
-    Call<Product> getProduct(@Path("id") Integer id);
+    Call<ProductDto> getProduct(@Path("id") Integer id);
 
     @DELETE("products/{id}")
     Call<ResponseBody> deleteProduct(@Path("id") Integer id);

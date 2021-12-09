@@ -8,8 +8,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import retrofit2.Response;
-import ru.diolloyd.lesson6atOrm.dto.Category;
-import ru.diolloyd.lesson6atOrm.dto.ErrorResponse;
+import ru.diolloyd.lesson6atOrm.db.model.Category;
+import ru.diolloyd.lesson6atOrm.dto.CategoryDto;
+import ru.diolloyd.lesson6atOrm.dto.ErrorResponseDto;
 import ru.diolloyd.lesson6atOrm.enums.CategoryType;
 import ru.diolloyd.lesson6atOrm.services.CategoryService;
 import ru.diolloyd.lesson6atOrm.utils.RetrofitUtils;
@@ -18,6 +19,8 @@ import java.time.Instant;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static ru.diolloyd.lesson6atOrm.dto.ProductDto.faker;
+import static ru.diolloyd.lesson6atOrm.utils.DbUtils.*;
 
 public class CategoryTests {
     private static CategoryService categoryService;
@@ -30,8 +33,8 @@ public class CategoryTests {
     @EnumSource(CategoryType.class)
     @SneakyThrows
     @ParameterizedTest
-    public void getCategoryByIdPositiveTest(CategoryType type) {
-        Response<Category> response = categoryService.getCategoryById(type.getId()).execute();
+    void getCategoryByIdPositiveTest(CategoryType type) {
+        Response<CategoryDto> response = categoryService.getCategoryById(type.getId()).execute();
         assertThat(response.isSuccessful(), is(true));
         assertThat(response.body(), notNullValue());
         assertThat(response.body().getId(), equalTo(type.getId()));
@@ -43,15 +46,31 @@ public class CategoryTests {
 
     @Test
     @SneakyThrows
-    public void getCategoryByIdNegativeTest() {
+    void getCategoryByIdNegativeTest() {
         int nonExistentId = (int) (Math.random() * (1000 - 100)) + 100;
-        Response<Category> response = categoryService.getCategoryById(nonExistentId).execute();
+        Response<CategoryDto> response = categoryService.getCategoryById(nonExistentId).execute();
         assertThat(response.code(), equalTo(404));
         assertThat(response.errorBody(), is(notNullValue()));
-        ErrorResponse errorResponse = new ObjectMapper().registerModule(new JavaTimeModule()).readValue(response.errorBody().string(), ErrorResponse.class);
+        ErrorResponseDto errorResponse = new ObjectMapper().registerModule(new JavaTimeModule()).readValue(response.errorBody().string(), ErrorResponseDto.class);
         assertThat(errorResponse.getStatus(), equalTo(404));
         assertThat(errorResponse.getMessage(), equalTo("Unable to find category with id: " + nonExistentId));
         long time = errorResponse.getTimestamp().getEpochSecond() - (Instant.now().getEpochSecond());
         assertThat(Math.abs(time) < 60L, is(true));
+    }
+
+    @Test
+    void testMethod() {
+        Category category = new Category();
+        category.setTitle(faker.animal().name());
+        createCategory(category);
+        category.setTitle(faker.animal().name());
+        modifyCategory(category);
+//        Category categoryFromDb = DbUtils.getCategories().stream()
+//                .filter(searchCategory -> searchCategory.getTitle().equals(category.getTitle()))
+//                .findFirst()
+//                .get();
+//        assertThat(category.getTitle(), equalTo(categoryFromDb.getTitle()));
+//        deleteCategoryById(categoryFromDb.getId());
+        deleteCategory(category);
     }
 }

@@ -9,7 +9,7 @@ import java.util.Properties;
 @UtilityClass
 public class ConfigUtils {
     private final Properties properties = new Properties();
-    private final InputStream configFile = ConfigUtils.class.getResourceAsStream("application.properties");
+    private final InputStream configFile = ConfigUtils.class.getClassLoader().getResourceAsStream("application.properties");
 
     @SneakyThrows
     public String getBaseUrl() {

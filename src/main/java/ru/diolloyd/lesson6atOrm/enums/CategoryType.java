@@ -5,7 +5,7 @@ import lombok.Getter;
 
 import java.util.function.Supplier;
 
-import static ru.diolloyd.lesson6atOrm.dto.Product.faker;
+import static ru.diolloyd.lesson6atOrm.dto.ProductDto.faker;
 
 @AllArgsConstructor
 @Getter

@@ -10,8 +10,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import retrofit2.Response;
-import ru.diolloyd.lesson6atOrm.dto.ErrorResponse;
-import ru.diolloyd.lesson6atOrm.dto.Product;
+import ru.diolloyd.lesson6atOrm.dto.ErrorResponseDto;
+import ru.diolloyd.lesson6atOrm.dto.ProductDto;
 import ru.diolloyd.lesson6atOrm.enums.CategoryType;
 import ru.diolloyd.lesson6atOrm.services.ProductService;
 import ru.diolloyd.lesson6atOrm.utils.ProductServiceRequests;
@@ -33,12 +33,12 @@ public class ProductNegativeTests {
     @ParameterizedTest
     @EnumSource(CategoryType.class)
     void createProductWithIdNegativeTest(CategoryType type) {
-        Product product = Product.createProductByType(type);
+        ProductDto product = ProductDto.createProductByType(type);
         product.setId((int) (Math.random() * 100));
-        Response<Product> response = requests.createProduct(product);
+        Response<ProductDto> response = requests.createProduct(product);
         assertThat(response.code(), equalTo(400));
         assertThat(response.errorBody(), is(notNullValue()));
-        ErrorResponse errorResponse = objectMapper.readValue(response.errorBody().string(), ErrorResponse.class);
+        ErrorResponseDto errorResponse = objectMapper.readValue(response.errorBody().string(), ErrorResponseDto.class);
         assertThat(errorResponse.getStatus(), equalTo(400));
         assertThat(errorResponse.getMessage(), equalTo("Id must be null for new entity"));
         time = errorResponse.getTimestamp().getEpochSecond() - (Instant.now().getEpochSecond());
@@ -51,12 +51,12 @@ public class ProductNegativeTests {
     @SneakyThrows
     @EnumSource(CategoryType.class)
     void createNoCategoryNoTitleProductNegativeTest(CategoryType type) {
-        Product product = Product.createProductByType(type);
+        ProductDto product = ProductDto.createProductByType(type);
         product.setCategoryTitle(null);
-        Response<Product> response = requests.createProduct(product);
+        Response<ProductDto> response = requests.createProduct(product);
         assertThat(response.code(), equalTo(400));
         assertThat(response.errorBody(), is(notNullValue()));
-        ErrorResponse errorResponse = objectMapper.readValue(response.errorBody().string(), ErrorResponse.class);
+        ErrorResponseDto errorResponse = objectMapper.readValue(response.errorBody().string(), ErrorResponseDto.class);
         assertThat(errorResponse.getStatus(), equalTo(400));
         assertThat(errorResponse.getMessage(), equalTo("CategoryTitle must be null for new entity"));
         time = errorResponse.getTimestamp().getEpochSecond() - (Instant.now().getEpochSecond());
@@ -69,12 +69,12 @@ public class ProductNegativeTests {
     @SneakyThrows
     @EnumSource(CategoryType.class)
     void createNegativePriceProductNegativeTest(CategoryType type) {
-        Product product = Product.createProductByType(type);
+        ProductDto product = ProductDto.createProductByType(type);
         product.setPrice((int) ((Math.random() * (10000 - 1000 + 1) + 1000)) * -1);
-        Response<Product> response = requests.createProduct(product);
+        Response<ProductDto> response = requests.createProduct(product);
         assertThat(response.code(), equalTo(400));
         assertThat(response.errorBody(), is(notNullValue()));
-        ErrorResponse errorResponse = objectMapper.readValue(response.errorBody().string(), ErrorResponse.class);
+        ErrorResponseDto errorResponse = objectMapper.readValue(response.errorBody().string(), ErrorResponseDto.class);
         assertThat(errorResponse.getStatus(), equalTo(400));
         assertThat(errorResponse.getMessage(), equalTo("The price cannot be negative"));
         time = errorResponse.getTimestamp().getEpochSecond() - (Instant.now().getEpochSecond());
@@ -84,10 +84,10 @@ public class ProductNegativeTests {
     @SneakyThrows
     @Test
     void modifyProductNegativeTest() {
-        Response<Product> response = requests.modifyProduct(new Product());
+        Response<ProductDto> response = requests.modifyProduct(new ProductDto());
         assertThat(response.code(), equalTo(400));
         assertThat(response.errorBody(), is(notNullValue()));
-        ErrorResponse errorResponse = objectMapper.readValue(response.errorBody().string(), ErrorResponse.class);
+        ErrorResponseDto errorResponse = objectMapper.readValue(response.errorBody().string(), ErrorResponseDto.class);
         assertThat(errorResponse.getStatus(), equalTo(400));
         assertThat(errorResponse.getMessage(), equalTo("Id must be not null for new entity"));
         time = errorResponse.getTimestamp().getEpochSecond() - (Instant.now().getEpochSecond());
@@ -98,10 +98,10 @@ public class ProductNegativeTests {
     @SneakyThrows
     @ParameterizedTest
     void getProductNegativeTest(int id) {
-        Response<Product> response = requests.getProduct(id);
+        Response<ProductDto> response = requests.getProduct(id);
         assertThat(response.code(), equalTo(404));
         assertThat(response.errorBody(), is(notNullValue()));
-        ErrorResponse errorResponse = objectMapper.readValue(response.errorBody().string(), ErrorResponse.class);
+        ErrorResponseDto errorResponse = objectMapper.readValue(response.errorBody().string(), ErrorResponseDto.class);
         assertThat(errorResponse.getStatus(), equalTo(404));
         assertThat(errorResponse.getMessage(), equalTo("Unable to find product with id: " + id));
         time = errorResponse.getTimestamp().getEpochSecond() - (Instant.now().getEpochSecond());
@@ -115,7 +115,7 @@ public class ProductNegativeTests {
         Response<ResponseBody> response = requests.deleteProduct(id);
         assertThat(response.code(), equalTo(500));
         assertThat(response.errorBody(), is(notNullValue()));
-        ErrorResponse errorResponse = objectMapper.readValue(response.errorBody().string(), ErrorResponse.class);
+        ErrorResponseDto errorResponse = objectMapper.readValue(response.errorBody().string(), ErrorResponseDto.class);
         assertThat(errorResponse.getStatus(), equalTo(500));
         assertThat(errorResponse.getMessage(), equalTo(""));
         assertThat(errorResponse.getError(), equalTo("Internal Server Error"));

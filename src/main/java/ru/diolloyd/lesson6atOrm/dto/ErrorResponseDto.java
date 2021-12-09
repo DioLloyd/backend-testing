@@ -5,7 +5,7 @@ import lombok.Data;
 import java.time.Instant;
 
 @Data
-public class ErrorResponse {
+public class ErrorResponseDto {
     private Integer status;
     private String message;
     private Instant timestamp;

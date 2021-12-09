@@ -26,21 +26,21 @@ import ru.diolloyd.lesson6atOrm.enums.CategoryType;
 @Setter
 @Accessors(chain = true)
 @EqualsAndHashCode
-public class Product {
+public class ProductDto {
     private Integer id;
     private String title;
     private Integer price;
     private String categoryTitle;
     public static final Faker faker = new Faker();
 
-    public static Product createProductByType(CategoryType type) {
-        return new Product()
+    public static ProductDto createProductByType(CategoryType type) {
+        return new ProductDto()
                 .setTitle(type.getProductTitleGenerator().get())
                 .setCategoryTitle(type.getTitle())
                 .setPrice(generateRandomPrice());
     }
 
-    public static Product modifyProductByType(Product product, CategoryType type) {
+    public static ProductDto modifyProductByType(ProductDto product, CategoryType type) {
         return product
                 .setTitle(type.getProductTitleGenerator().get())
                 .setPrice(generateRandomPrice());
