@@ -2,6 +2,7 @@ package ru.diolloyd.lesson5atRetrofit.tests;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import io.qameta.allure.Feature;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -27,6 +28,7 @@ public class CategoryTests {
         categoryService = RetrofitUtils.getRetrofit().create(CategoryService.class);
     }
 
+    @Feature(value = "Тест категорий")
     @EnumSource(CategoryType.class)
     @SneakyThrows
     @ParameterizedTest
@@ -41,6 +43,7 @@ public class CategoryTests {
         );
     }
 
+    @Feature(value = "Тест категорий")
     @Test
     @SneakyThrows
     public void getCategoryByIdNegativeTest() {

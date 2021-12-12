@@ -2,6 +2,7 @@ package ru.diolloyd.lesson5atRetrofit.tests;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import io.qameta.allure.Feature;
 import lombok.SneakyThrows;
 import okhttp3.ResponseBody;
 import org.junit.jupiter.api.Disabled;
@@ -29,6 +30,7 @@ public class ProductNegativeTests {
     private long time;
     private final ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
 
+    @Feature(value = "Негативный тест")
     @SneakyThrows
     @ParameterizedTest
     @EnumSource(CategoryType.class)
@@ -45,6 +47,7 @@ public class ProductNegativeTests {
         assertThat(Math.abs(time) < 60L, is(true));
     }
 
+    @Feature(value = "Негативный тест")
     /* Тест упадёт т.к. сервис создаёт продукт без категории. */
     @Disabled
     @ParameterizedTest
@@ -63,6 +66,7 @@ public class ProductNegativeTests {
         assertThat(Math.abs(time) < 60L, is(true));
     }
 
+    @Feature(value = "Негативный тест")
     /* Тест упадёт т.к. сервис создаёт продукт с отрицательной ценой. */
     @Disabled
     @ParameterizedTest
@@ -81,6 +85,7 @@ public class ProductNegativeTests {
         assertThat(Math.abs(time) < 60L, is(true));
     }
 
+    @Feature(value = "Негативный тест")
     @SneakyThrows
     @Test
     void modifyProductNegativeTest() {
@@ -94,6 +99,7 @@ public class ProductNegativeTests {
         assertThat(Math.abs(time) < 60L, is(true));
     }
 
+    @Feature(value = "Негативный тест")
     @ValueSource(ints = {-42, -1, 0, 9999999})
     @SneakyThrows
     @ParameterizedTest
@@ -108,6 +114,7 @@ public class ProductNegativeTests {
         assertThat(Math.abs(time) < 60L, is(true));
     }
 
+    @Feature(value = "Негативный тест")
     @ValueSource(ints = {-42, -1, 0, 9999999})
     @SneakyThrows
     @ParameterizedTest

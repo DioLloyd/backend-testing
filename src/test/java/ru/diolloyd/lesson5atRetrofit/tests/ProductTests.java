@@ -1,5 +1,10 @@
 package ru.diolloyd.lesson5atRetrofit.tests;
 
+import io.qameta.allure.Description;
+import io.qameta.allure.Feature;
+import io.qameta.allure.Step;
+import jdk.jfr.Category;
+import jdk.jfr.Name;
 import okhttp3.ResponseBody;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -25,6 +30,9 @@ public class ProductTests {
     private final ProductService productService = RetrofitUtils.getRetrofit().create(ProductService.class);
     private final ProductServiceRequests requests = new ProductServiceRequests(productService);
 
+
+    @Description(value = "Get products")
+    @Feature(value = "Получение списка продуктов")
     @Test
     void getProductsTest() {
         Response<ArrayList<Product>> products = requests.getProducts();
@@ -35,6 +43,8 @@ public class ProductTests {
         assertThat(products.body().get(0).getCategoryTitle(), is(notNullValue()));
     }
 
+    @Description(value = "Create product")
+    @Feature(value = "Создание продукта")
     @ParameterizedTest
     @EnumSource(CategoryType.class)
     void createProductTest(CategoryType type) {
@@ -44,6 +54,8 @@ public class ProductTests {
         deleteRequest(response.body().getId());
     }
 
+    @Description(value = "Modify product")
+    @Feature(value = "Изменение продукта")
     @ParameterizedTest
     @EnumSource(CategoryType.class)
     void modifyProductTest(CategoryType type) {
@@ -59,6 +71,8 @@ public class ProductTests {
         deleteRequest(createResponse.body().getId());
     }
 
+    @Description(value = "Get product")
+    @Feature(value = "Получение продукта")
     @ParameterizedTest
     @EnumSource(CategoryType.class)
     void getProductTest(CategoryType type) {
@@ -72,6 +86,8 @@ public class ProductTests {
         deleteRequest(createResponse.body().getId());
     }
 
+    @Description(value = "Create product without price and title")
+    @Feature(value = "Создание продукта без цены и описания")
     @ParameterizedTest
     @EnumSource(CategoryType.class)
     void createNoPriceNoTitleProductTest(CategoryType type) {
@@ -85,6 +101,7 @@ public class ProductTests {
         deleteRequest(response.body().getId());
     }
 
+    @Step(value = "Удаление продукта")
     private void deleteRequest(Integer id) {
         Response<ResponseBody> deleteResponse = requests.deleteProduct(id);
         assertThat(deleteResponse.isSuccessful(), is(true));
