@@ -1,5 +1,6 @@
 package ru.diolloyd.lesson5atRetrofit.utils;
 
+import io.qameta.allure.okhttp3.AllureOkHttp3;
 import lombok.experimental.UtilityClass;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -15,6 +16,7 @@ public class RetrofitUtils {
     public Retrofit getRetrofit() {
         OkHttpClient client = new OkHttpClient.Builder()
                 .addInterceptor(logging.setLevel(BODY))
+                .addInterceptor(new AllureOkHttp3())
                 .build();
         return new Retrofit.Builder()
                 .client(client)
