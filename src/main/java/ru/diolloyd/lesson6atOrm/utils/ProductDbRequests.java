@@ -10,23 +10,23 @@ public class ProductDbRequests {
 
     private static final ProductMapper mapper = DbUtils.getProductMapper();
 
-    public static List<Product> getProductsDb() {
+    public static List<Product> getProductsFromDb() {
         return mapper.selectByExample(new ProductExample());
     }
 
-    public static void createProductDb(Product product) {
+    public static void addProductInDb(Product product) {
         mapper.insert(product);
     }
 
-    public static void modifyProductDb(Product product) {
+    public static void modifyProductInDb(Product product) {
         mapper.updateByPrimaryKey(product);
     }
 
-    public static void getProductDb(Long id) {
-        mapper.selectByPrimaryKey(id);
+    public static Product getProductFromDb(Long id) {
+        return mapper.selectByPrimaryKey(id);
     }
 
-    public static void deleteProductDb(Long id) {
+    public static void deleteProductFromDb(Long id) {
         mapper.deleteByPrimaryKey(id);
     }
 

@@ -10,19 +10,23 @@ public class CategoryDbRequests {
 
     private static final CategoryMapper mapper = DbUtils.getCategoryMapper();
 
-    public static List<Category> getCategories() {
+    public static List<Category> getCategoriesFromDb() {
         return mapper.selectByExample(new CategoryExample());
     }
 
-    public static void createCategory(Category category) {
+    public static void createCategoryInDb(Category category) {
         mapper.insert(category);
     }
 
-    public static void modifyCategory(Category category) {
+    public static void modifyCategoryInDb(Category category) {
         mapper.updateByPrimaryKey(category);
     }
 
-    public static void deleteCategory(int id) {
+    public static Category getCategoryFromDb(int id) {
+        return mapper.selectByPrimaryKey(id);
+    }
+
+    public static void deleteCategoryFromDb(int id) {
         mapper.deleteByPrimaryKey(id);
     }
 

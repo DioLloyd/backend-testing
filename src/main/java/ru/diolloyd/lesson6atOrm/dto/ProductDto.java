@@ -33,16 +33,17 @@ public class ProductDto {
     private String categoryTitle;
     public static final Faker faker = new Faker();
 
+    public static ProductDto createProductDto(String categoryTitle) {
+        return new ProductDto()
+                .setTitle(faker.color().name() + " " + categoryTitle)
+                .setPrice(generateRandomPrice())
+                .setCategoryTitle(categoryTitle);
+    }
+
     public static ProductDto createProductByType(CategoryType type) {
         return new ProductDto()
                 .setTitle(type.getProductTitleGenerator().get())
                 .setCategoryTitle(type.getTitle())
-                .setPrice(generateRandomPrice());
-    }
-
-    public static ProductDto modifyProductByType(ProductDto product, CategoryType type) {
-        return product
-                .setTitle(type.getProductTitleGenerator().get())
                 .setPrice(generateRandomPrice());
     }
 

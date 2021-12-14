@@ -17,8 +17,8 @@ import java.time.Instant;
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static ru.diolloyd.lesson6atOrm.dto.ProductDto.faker;
-import static ru.diolloyd.lesson6atOrm.utils.CategoryDbRequests.createCategory;
-import static ru.diolloyd.lesson6atOrm.utils.CategoryDbRequests.deleteCategory;
+import static ru.diolloyd.lesson6atOrm.utils.CategoryDbRequests.createCategoryInDb;
+import static ru.diolloyd.lesson6atOrm.utils.CategoryDbRequests.deleteCategoryFromDb;
 
 public class CategoryTests {
     private static CategoryService categoryService;
@@ -33,17 +33,17 @@ public class CategoryTests {
     void getCategoryPositiveTest() {
         Category category = new Category();
         category.setTitle(faker.animal().name());
-        createCategory(category);
+        createCategoryInDb(category);
         Response<CategoryDto> response = categoryService.getCategoryById(category.getId()).execute();
         assertThat(response.isSuccessful(), is(true));
         assertThat(response.body(), notNullValue());
         assertThat(response.body().getId(), equalTo(category.getId()));
         assertThat(response.body().getTitle(), equalTo(category.getTitle()));
-        deleteCategory(category.getId());
+        deleteCategoryFromDb(category.getId());
     }
 
-    @Test
     @SneakyThrows
+    @Test
     void getCategoryNegativeTest() {
         int nonExistentId = (int) (Math.random() * (100000 - 100)) + 100;
         Response<CategoryDto> response = categoryService.getCategoryById(nonExistentId).execute();
