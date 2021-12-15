@@ -17,8 +17,8 @@ import java.time.Instant;
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static ru.diolloyd.lesson6atOrm.dto.ProductDto.faker;
-import static ru.diolloyd.lesson6atOrm.utils.CategoryDbRequests.createCategoryInDb;
-import static ru.diolloyd.lesson6atOrm.utils.CategoryDbRequests.deleteCategoryFromDb;
+import static ru.diolloyd.lesson6atOrm.utils.CategoryDao.createCategoryInDb;
+import static ru.diolloyd.lesson6atOrm.utils.CategoryDao.deleteCategoryFromDb;
 
 public class CategoryTests {
     private static CategoryService categoryService;

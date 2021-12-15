@@ -4,16 +4,18 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.SneakyThrows;
 import okhttp3.ResponseBody;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.EnumSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import retrofit2.Response;
+import ru.diolloyd.lesson6atOrm.db.model.Category;
 import ru.diolloyd.lesson6atOrm.dto.ErrorResponseDto;
 import ru.diolloyd.lesson6atOrm.dto.ProductDto;
-import ru.diolloyd.lesson6atOrm.enums.CategoryType;
 import ru.diolloyd.lesson6atOrm.services.ProductService;
+import ru.diolloyd.lesson6atOrm.utils.CategoryDao;
 import ru.diolloyd.lesson6atOrm.utils.ProductServiceRequests;
 import ru.diolloyd.lesson6atOrm.utils.RetrofitUtils;
 
@@ -21,6 +23,8 @@ import java.time.Instant;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static ru.diolloyd.lesson6atOrm.dto.ProductDto.createProductDto;
+import static ru.diolloyd.lesson6atOrm.dto.ProductDto.faker;
 
 public class ProductNegativeTests {
 
@@ -29,12 +33,25 @@ public class ProductNegativeTests {
     private final ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
     private long time;
 
+    private Category category;
+
+    @BeforeEach
+    void createCategoryInDb() {
+        category = new Category();
+        category.setTitle(faker.aviation().aircraft());
+        CategoryDao.createCategoryInDb(category);
+    }
+
+    @AfterEach
+    void deleteCategoryFromDb() {
+        CategoryDao.deleteCategoryFromDb(category.getId());
+    }
+
     @SneakyThrows
-    @ParameterizedTest
-    @EnumSource(CategoryType.class)
-    void createProductWithIdNegativeTest(CategoryType type) {
-        ProductDto product = ProductDto.createProductByType(type);
-        product.setId((int) (Math.random() * 100));
+    @Test
+    void createProductWithIdNegativeTest() {
+        ProductDto product = createProductDto(category.getTitle());
+        product.setId((int) (1 + (Math.random() * 999)));
         Response<ProductDto> response = requests.createProduct(product);
         assertThat(response.code(), equalTo(400));
         assertThat(response.errorBody(), is(notNullValue()));
@@ -47,11 +64,10 @@ public class ProductNegativeTests {
 
     /* Тест упадёт т.к. сервис создаёт продукт без категории. */
     @Disabled
-    @ParameterizedTest
     @SneakyThrows
-    @EnumSource(CategoryType.class)
-    void createNoCategoryNoTitleProductNegativeTest(CategoryType type) {
-        ProductDto product = ProductDto.createProductByType(type);
+    @Test
+    void createProductWithoutCategoryTitleNegativeTest() {
+        ProductDto product = createProductDto(category.getTitle());
         product.setCategoryTitle(null);
         Response<ProductDto> response = requests.createProduct(product);
         assertThat(response.code(), equalTo(400));
@@ -63,14 +79,30 @@ public class ProductNegativeTests {
         assertThat(Math.abs(time) < 60L, is(true));
     }
 
+    /* Тест упадёт т.к. сервис создаёт продукт без цены. */
+    @Disabled
+    @SneakyThrows
+    @Test
+    void createProductWithoutPriceNegativeTest() {
+        ProductDto product = createProductDto(category.getTitle());
+        product.setPrice(null);
+        Response<ProductDto> response = requests.createProduct(product);
+        assertThat(response.code(), equalTo(400));
+        assertThat(response.errorBody(), is(notNullValue()));
+        ErrorResponseDto errorResponse = objectMapper.readValue(response.errorBody().string(), ErrorResponseDto.class);
+        assertThat(errorResponse.getStatus(), equalTo(400));
+        assertThat(errorResponse.getMessage(), equalTo("Price must be null for new entity"));
+        time = errorResponse.getTimestamp().getEpochSecond() - (Instant.now().getEpochSecond());
+        assertThat(Math.abs(time) < 60L, is(true));
+    }
+
     /* Тест упадёт т.к. сервис создаёт продукт с отрицательной ценой. */
     @Disabled
-    @ParameterizedTest
     @SneakyThrows
-    @EnumSource(CategoryType.class)
-    void createNegativePriceProductNegativeTest(CategoryType type) {
-        ProductDto product = ProductDto.createProductByType(type);
-        product.setPrice((int) ((Math.random() * (10000 - 1000 + 1) + 1000)) * -1);
+    @Test
+    void createNegativePriceProductNegativeTest() {
+        ProductDto product = createProductDto(category.getTitle());
+        product.setPrice((int) (-1000 + (Math.random() * 999)));
         Response<ProductDto> response = requests.createProduct(product);
         assertThat(response.code(), equalTo(400));
         assertThat(response.errorBody(), is(notNullValue()));

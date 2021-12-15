@@ -6,7 +6,7 @@ import ru.diolloyd.lesson6atOrm.db.model.ProductExample;
 
 import java.util.List;
 
-public class ProductDbRequests {
+public class ProductDao {
 
     private static final ProductMapper mapper = DbUtils.getProductMapper();
 

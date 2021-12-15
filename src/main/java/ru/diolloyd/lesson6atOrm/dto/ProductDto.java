@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import ru.diolloyd.lesson6atOrm.enums.CategoryType;
 
 /**
  * Альтернативное создание объекта с помощью аннотации @With
@@ -38,13 +37,6 @@ public class ProductDto {
                 .setTitle(faker.color().name() + " " + categoryTitle)
                 .setPrice(generateRandomPrice())
                 .setCategoryTitle(categoryTitle);
-    }
-
-    public static ProductDto createProductByType(CategoryType type) {
-        return new ProductDto()
-                .setTitle(type.getProductTitleGenerator().get())
-                .setCategoryTitle(type.getTitle())
-                .setPrice(generateRandomPrice());
     }
 
     private static int generateRandomPrice() {

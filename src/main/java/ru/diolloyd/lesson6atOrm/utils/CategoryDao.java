@@ -6,7 +6,7 @@ import ru.diolloyd.lesson6atOrm.db.model.CategoryExample;
 
 import java.util.List;
 
-public class CategoryDbRequests {
+public class CategoryDao {
 
     private static final CategoryMapper mapper = DbUtils.getCategoryMapper();
 

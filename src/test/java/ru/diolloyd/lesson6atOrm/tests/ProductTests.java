@@ -9,8 +9,8 @@ import ru.diolloyd.lesson6atOrm.db.model.Category;
 import ru.diolloyd.lesson6atOrm.db.model.Product;
 import ru.diolloyd.lesson6atOrm.dto.ProductDto;
 import ru.diolloyd.lesson6atOrm.services.ProductService;
-import ru.diolloyd.lesson6atOrm.utils.CategoryDbRequests;
-import ru.diolloyd.lesson6atOrm.utils.ProductDbRequests;
+import ru.diolloyd.lesson6atOrm.utils.CategoryDao;
+import ru.diolloyd.lesson6atOrm.utils.ProductDao;
 import ru.diolloyd.lesson6atOrm.utils.ProductServiceRequests;
 import ru.diolloyd.lesson6atOrm.utils.RetrofitUtils;
 
@@ -29,24 +29,25 @@ public class ProductTests {
     private final ProductService productService = RetrofitUtils.getRetrofit().create(ProductService.class);
     private final ProductServiceRequests requests = new ProductServiceRequests(productService);
 
-    private Category category = new Category();
+    private Category category;
 
     @BeforeEach
     void createCategoryInDb() {
+        category = new Category();
         category.setTitle(faker.aviation().aircraft());
-        CategoryDbRequests.createCategoryInDb(category);
+        CategoryDao.createCategoryInDb(category);
     }
 
     @AfterEach
     void deleteCategoryFromDb() {
-        CategoryDbRequests.deleteCategoryFromDb(category.getId());
+        CategoryDao.deleteCategoryFromDb(category.getId());
     }
 
     @Test
     void getProductsTest() {
         Product productModel = createProductModel(category);
-        ProductDbRequests.addProductInDb(productModel);
-        List<Product> productsFromDb = ProductDbRequests.getProductsFromDb();
+        ProductDao.addProductInDb(productModel);
+        List<Product> productsFromDb = ProductDao.getProductsFromDb();
 
         Response<ArrayList<ProductDto>> response = requests.getProducts();
         assertThat(response.body(), is(notNullValue()));
@@ -62,7 +63,7 @@ public class ProductTests {
         assertThat(productDto.getPrice(), equalTo(productModel.getPrice()));
         assertThat(productDto.getCategoryTitle(), equalTo(category.getTitle()));
 
-        ProductDbRequests.deleteProductFromDb(productModel.getId());
+        ProductDao.deleteProductFromDb(productModel.getId());
     }
 
     @Test
@@ -77,19 +78,19 @@ public class ProductTests {
         assertThat(response.body().getPrice(), equalTo(product.getPrice()));
         assertThat(response.body().getCategoryTitle(), equalTo(product.getCategoryTitle()));
 
-        ProductDbRequests.deleteProductFromDb(response.body().getId().longValue());
+        ProductDao.deleteProductFromDb(response.body().getId().longValue());
     }
 
     @Test
     void modifyProductTest() {
         Product productModel = createProductModel(category);
-        ProductDbRequests.addProductInDb(productModel);
-        int categoryId = category.getId();
+        ProductDao.addProductInDb(productModel);
 
-        category.setTitle(faker.aviation().aircraft());
-        CategoryDbRequests.createCategoryInDb(category);
+        Category categoryNew = new Category();
+        categoryNew.setTitle(faker.aviation().aircraft());
+        CategoryDao.createCategoryInDb(categoryNew);
 
-        ProductDto productDto = createProductDto(category.getTitle())
+        ProductDto productDto = createProductDto(categoryNew.getTitle())
                 .setId(productModel.getId().intValue());
 
         Response<ProductDto> response = requests.modifyProduct(productDto);
@@ -100,14 +101,14 @@ public class ProductTests {
         assertThat(response.body().getPrice(), equalTo(productDto.getPrice()));
         assertThat(response.body().getCategoryTitle(), equalTo(productDto.getCategoryTitle()));
 
-        ProductDbRequests.deleteProductFromDb(response.body().getId().longValue());
-        CategoryDbRequests.deleteCategoryFromDb(categoryId);
+        ProductDao.deleteProductFromDb(response.body().getId().longValue());
+        CategoryDao.deleteCategoryFromDb(categoryNew.getId());
     }
 
     @Test
     void getProductTest() {
         Product productModel = createProductModel(category);
-        ProductDbRequests.addProductInDb(productModel);
+        ProductDao.addProductInDb(productModel);
 
         Response<ProductDto> response = requests.getProduct(productModel.getId().intValue());
         assertThat(response.isSuccessful(), is(true));
@@ -115,27 +116,25 @@ public class ProductTests {
         assertThat(response.body().getId(), equalTo(productModel.getId().intValue()));
         assertThat(response.body().getTitle(), equalTo(productModel.getTitle()));
         assertThat(response.body().getPrice(), equalTo(productModel.getPrice()));
-        assertThat(
-                response.body().getCategoryTitle(),
-                equalTo(CategoryDbRequests.getCategoryFromDb(category.getId()).getTitle())
-        );
+        assertThat(response.body().getCategoryTitle(), equalTo(category.getTitle()));
 
-        ProductDbRequests.deleteProductFromDb(response.body().getId().longValue());
+        ProductDao.deleteProductFromDb(response.body().getId().longValue());
     }
 
     @Test
     void deleteProductTest() {
         Product productModel = createProductModel(category);
-        ProductDbRequests.addProductInDb(productModel);
+        ProductDao.addProductInDb(productModel);
 
         Response<ResponseBody> response = requests.deleteProduct(productModel.getId().intValue());
         assertThat(response.isSuccessful(), is(true));
-        List<Product> products = ProductDbRequests.getProductsFromDb();
+        List<Product> products = ProductDao.getProductsFromDb();
         assertThat(
                 products.stream()
                         .noneMatch(productStream -> productStream.getId().equals(productModel.getId())),
                 is(true)
         );
+//        assertThat(ProductDao.getProductFromDb(productModel.getId()), is(nullValue()));
     }
 
     @Test
@@ -144,14 +143,14 @@ public class ProductTests {
         assertThat(response.isSuccessful(), is(true));
         assertThat(response.body(), is(notNullValue()));
 
-        Product product = ProductDbRequests.getProductFromDb(response.body().getId().longValue());
+        Product product = ProductDao.getProductFromDb(response.body().getId().longValue());
 
         assertThat(response.body().getId(), equalTo(product.getId().intValue()));
         assertThat(response.body().getTitle(), equalTo(product.getTitle()));
         assertThat(response.body().getPrice(), equalTo(product.getPrice()));
         assertThat(response.body().getCategoryTitle(), equalTo(category.getTitle()));
 
-        ProductDbRequests.deleteProductFromDb(response.body().getId().longValue());
+        ProductDao.deleteProductFromDb(response.body().getId().longValue());
     }
 
     private Product createProductModel(Category category) {
