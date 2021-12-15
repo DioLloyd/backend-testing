@@ -58,7 +58,7 @@ public class ProductTests {
                 .findFirst()
                 .get();
 
-        assertThat(productDto.getId(), equalTo(productModel.getId()));
+        assertThat(productDto.getId(), equalTo(productModel.getId().intValue()));
         assertThat(productDto.getTitle(), equalTo(productModel.getTitle()));
         assertThat(productDto.getPrice(), equalTo(productModel.getPrice()));
         assertThat(productDto.getCategoryTitle(), equalTo(category.getTitle()));
