@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import retrofit2.Response;
 import ru.diolloyd.lesson6atOrm.db.model.Category;
@@ -20,6 +21,7 @@ import static ru.diolloyd.lesson6atOrm.dto.ProductDto.faker;
 import static ru.diolloyd.lesson6atOrm.utils.CategoryDao.createCategoryInDb;
 import static ru.diolloyd.lesson6atOrm.utils.CategoryDao.deleteCategoryFromDb;
 
+@DisplayName("Category tests")
 public class CategoryTests {
     private static CategoryService categoryService;
 
@@ -28,6 +30,7 @@ public class CategoryTests {
         categoryService = RetrofitUtils.getRetrofit().create(CategoryService.class);
     }
 
+    @DisplayName("Get category positive")
     @SneakyThrows
     @Test
     void getCategoryPositiveTest() {
@@ -42,6 +45,7 @@ public class CategoryTests {
         deleteCategoryFromDb(category.getId());
     }
 
+    @DisplayName("Get category negative")
     @SneakyThrows
     @Test
     void getCategoryNegativeTest() {

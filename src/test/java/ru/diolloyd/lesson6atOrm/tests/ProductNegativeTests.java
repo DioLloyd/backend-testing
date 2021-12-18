@@ -2,14 +2,13 @@ package ru.diolloyd.lesson6atOrm.tests;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import io.qameta.allure.Description;
 import lombok.SneakyThrows;
 import okhttp3.ResponseBody;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import retrofit2.Response;
 import ru.diolloyd.lesson6atOrm.db.model.Category;
 import ru.diolloyd.lesson6atOrm.dto.ErrorResponseDto;
@@ -20,12 +19,14 @@ import ru.diolloyd.lesson6atOrm.utils.ProductServiceRequests;
 import ru.diolloyd.lesson6atOrm.utils.RetrofitUtils;
 
 import java.time.Instant;
+import java.util.stream.Stream;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static ru.diolloyd.lesson6atOrm.dto.ProductDto.createProductDto;
 import static ru.diolloyd.lesson6atOrm.dto.ProductDto.faker;
 
+@DisplayName("Negative tests")
 public class ProductNegativeTests {
 
     private final ProductService productService = RetrofitUtils.getRetrofit().create(ProductService.class);
@@ -47,6 +48,7 @@ public class ProductNegativeTests {
         CategoryDao.deleteCategoryFromDb(category.getId());
     }
 
+    @DisplayName("Create product with id test")
     @SneakyThrows
     @Test
     void createProductWithIdNegativeTest() {
@@ -113,6 +115,7 @@ public class ProductNegativeTests {
         assertThat(Math.abs(time) < 60L, is(true));
     }
 
+    @DisplayName("Modify product without id test")
     @SneakyThrows
     @Test
     void modifyProductNegativeTest() {
@@ -126,7 +129,8 @@ public class ProductNegativeTests {
         assertThat(Math.abs(time) < 60L, is(true));
     }
 
-    @ValueSource(ints = {-42, -1, 0, 9999999})
+    @Description("Get product negative test")
+    @MethodSource("namedArgumentsForGetProductNegativeTest")
     @SneakyThrows
     @ParameterizedTest
     void getProductNegativeTest(int id) {
@@ -140,7 +144,17 @@ public class ProductNegativeTests {
         assertThat(Math.abs(time) < 60L, is(true));
     }
 
-    @ValueSource(ints = {-42, -1, 0, 9999999})
+    private static Stream<Arguments> namedArgumentsForGetProductNegativeTest() {
+        return Stream.of(
+                Arguments.of(Named.of("Get product test with ID = -42", -42)),
+                Arguments.of(Named.of("Get product test with ID = -1", -1)),
+                Arguments.of(Named.of("Get product test with ID = 0", 0)),
+                Arguments.of(Named.of("Get product test with ID = 9999999", 9999999))
+        );
+    }
+
+    @Description("Delete product negative test")
+    @MethodSource("namedArgumentsForDeleteProductNegativeTest")
     @SneakyThrows
     @ParameterizedTest
     void deleteProductNegativeTest(int id) {
@@ -154,5 +168,14 @@ public class ProductNegativeTests {
         assertThat(errorResponse.getPath(), equalTo("/market/api/v1/products/" + id));
         time = errorResponse.getTimestamp().getEpochSecond() - (Instant.now().getEpochSecond());
         assertThat(Math.abs(time) < 60L, is(true));
+    }
+
+    private static Stream<Arguments> namedArgumentsForDeleteProductNegativeTest() {
+        return Stream.of(
+                Arguments.of(Named.of("Delete product test with ID = -42", -42)),
+                Arguments.of(Named.of("Delete product test with ID = -1", -1)),
+                Arguments.of(Named.of("Delete product test with ID = 0", 0)),
+                Arguments.of(Named.of("Delete product test with ID = 9999999", 9999999))
+        );
     }
 }

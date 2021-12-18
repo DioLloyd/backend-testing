@@ -3,6 +3,7 @@ package ru.diolloyd.lesson6atOrm.tests;
 import okhttp3.ResponseBody;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import retrofit2.Response;
 import ru.diolloyd.lesson6atOrm.db.model.Category;
@@ -24,6 +25,7 @@ import static org.hamcrest.core.IsEqual.equalTo;
 import static ru.diolloyd.lesson6atOrm.dto.ProductDto.createProductDto;
 import static ru.diolloyd.lesson6atOrm.dto.ProductDto.faker;
 
+@DisplayName("Product positive tests")
 public class ProductTests {
 
     private final ProductService productService = RetrofitUtils.getRetrofit().create(ProductService.class);
@@ -43,6 +45,7 @@ public class ProductTests {
         CategoryDao.deleteCategoryFromDb(category.getId());
     }
 
+    @DisplayName("Get products")
     @Test
     void getProductsTest() {
         Product productModel = createProductModel(category);
@@ -66,6 +69,7 @@ public class ProductTests {
         ProductDao.deleteProductFromDb(productModel.getId());
     }
 
+    @DisplayName("Create product")
     @Test
     void createProductTest() {
         ProductDto product = createProductDto(category.getTitle());
@@ -81,6 +85,7 @@ public class ProductTests {
         ProductDao.deleteProductFromDb(response.body().getId().longValue());
     }
 
+    @DisplayName("Modify product")
     @Test
     void modifyProductTest() {
         Product productModel = createProductModel(category);
@@ -105,6 +110,7 @@ public class ProductTests {
         CategoryDao.deleteCategoryFromDb(categoryNew.getId());
     }
 
+    @DisplayName("Get product")
     @Test
     void getProductTest() {
         Product productModel = createProductModel(category);
@@ -121,6 +127,7 @@ public class ProductTests {
         ProductDao.deleteProductFromDb(response.body().getId().longValue());
     }
 
+    @DisplayName("Delete product")
     @Test
     void deleteProductTest() {
         Product productModel = createProductModel(category);
@@ -137,6 +144,7 @@ public class ProductTests {
 //        assertThat(ProductDao.getProductFromDb(productModel.getId()), is(nullValue()));
     }
 
+    @DisplayName("Create product without price and description")
     @Test
     void createNoPriceNoTitleProductTest() {
         Response<ProductDto> response = requests.createProduct(new ProductDto().setCategoryTitle(category.getTitle()));
