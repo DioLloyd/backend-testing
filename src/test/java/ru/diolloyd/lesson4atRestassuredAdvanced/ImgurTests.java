@@ -10,12 +10,14 @@ import static org.hamcrest.core.IsEqual.equalTo;
 
 public class ImgurTests extends BaseTest {
 
+    private final String endpoint = "https://api.imgur.com/3/account/";
+
     @Test
     @SneakyThrows
     public void getAccountTest() {
         Response response = given(requestSpecAuth)
                 .when()
-                .get("https://api.imgur.com/3/account/{username}", username)
+                .get(endpoint + username)
                 .prettyPeek();
         assertThat(response.jsonPath().get("data.url"), equalTo(username));
         assertThat(response.statusCode(), equalTo(200));

@@ -10,13 +10,12 @@ import io.restassured.specification.RequestSpecification;
 import io.restassured.specification.ResponseSpecification;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 
 import java.io.File;
 import java.io.FileReader;
 import java.util.Properties;
 
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.is;
 import static org.hamcrest.core.IsEqual.equalTo;
 
 public abstract class BaseTest {
@@ -37,6 +36,7 @@ public abstract class BaseTest {
     @BeforeAll
     public static void beforeAll() {
         properties.load(new FileReader(file));
+        username = properties.getProperty("username");
         RestAssured.enableLoggingOfRequestAndResponseIfValidationFails(); //TODO посмотерть логи без этой строчки
         RestAssured.filters(new AllureRestAssured());
         RestAssured.baseURI = "https://api.imgur.com/3";
