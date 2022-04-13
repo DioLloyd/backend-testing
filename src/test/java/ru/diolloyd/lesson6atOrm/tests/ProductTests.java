@@ -1,10 +1,7 @@
 package ru.diolloyd.lesson6atOrm.tests;
 
 import okhttp3.ResponseBody;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import retrofit2.Response;
 import ru.diolloyd.lesson6atOrm.db.model.Category;
 import ru.diolloyd.lesson6atOrm.db.model.Product;
@@ -45,6 +42,7 @@ public class ProductTests {
         CategoryDao.deleteCategoryFromDb(category.getId());
     }
 
+    @Disabled
     @DisplayName("Get products")
     @Test
     void getProductsTest() {
